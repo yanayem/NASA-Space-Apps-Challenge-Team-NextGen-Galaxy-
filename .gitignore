@@ -1,0 +1,37 @@
+# Environment & secret files
+*.env
+serviceAccountKey.json
+*.key
+
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+db.sqlite3
+media/
+staticfiles/
+
+# IDE / Editor files
+.idea/
+.vscode/
+*.iml
+
+# Flutter / Dart
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+mobile/build/
+mobile/.dart_tool/
+mobile/.pub/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+
+# OS generated
+.DS_Store
+Thumbs.db
