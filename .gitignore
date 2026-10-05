@@ -3,6 +3,10 @@
 serviceAccountKey.json
 *.key
 
+# Internal Plans
+BUSINESS_PLAN.md
+PROJECT_PLAN.md
+
 # Python / Django
 __pycache__/
 *.py[cod]
