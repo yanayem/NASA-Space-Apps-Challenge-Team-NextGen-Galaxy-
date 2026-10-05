@@ -7,4 +7,5 @@ urlpatterns = [
     path('indicators/', views.environmental_indicators, name='environmental_indicators'),
     path('risk-analysis/', views.site_risk_analysis, name='site_risk_analysis'),
     path('site-comparison/', views.site_comparison, name='site_comparison'),
+    path('reports/generate/', views.generate_risk_report, name='generate_risk_report'),
 ]
