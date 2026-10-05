@@ -1,9 +1,12 @@
-# Environment & secret files
+# Environment & Secret Files
 *.env
+!.env.example
 serviceAccountKey.json
 *.key
+*.pem
+*.p12
 
-# Internal Plans
+# Confidential Internal Plans
 BUSINESS_PLAN.md
 PROJECT_PLAN.md
 
@@ -13,16 +16,24 @@ __pycache__/
 *$py.class
 venv/
 .venv/
+env/
+ENV/
+*.sqlite3
 db.sqlite3
 media/
 staticfiles/
+*.log
 
-# IDE / Editor files
+# IDE & Editor Files
 .idea/
 .vscode/
 *.iml
+*.ipr
+*.iws
+.project
+.settings/
 
-# Flutter / Dart
+# Flutter / Dart General
 **/doc/api/
 .dart_tool/
 .flutter-plugins
@@ -36,6 +47,24 @@ mobile/.pub/
 mobile/.flutter-plugins
 mobile/.flutter-plugins-dependencies
 
-# OS generated
+# Android Specific
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/captures/
+mobile/android/local.properties
+
+# iOS Specific
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/DerivedData/
+
+# OS Generated Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
