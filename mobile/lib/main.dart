@@ -43,9 +43,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // Base URL for backend:
-  // Use 'http://10.0.2.2:8000' for Android Emulator
-  // Use 'http://localhost:8000' for Windows / Chrome / iOS Simulator
-  static const String backendUrl = 'http://10.0.2.2:8000/api';
+  // Use your local Wi-Fi IP 'http://192.168.0.163:8000/api' for physical devices and emulators
+  static const String backendUrl = 'http://192.168.0.163:8000/api';
 
   Map<String, dynamic>? _apodData;
   bool _isLoading = true;
