@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'corsheaders',
+    'drf_spectacular',
     # Local apps
     'api',
 ]
@@ -135,6 +136,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # For development
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
@@ -142,6 +144,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+}
+
+# Swagger / OpenAPI Settings (drf-spectacular)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SpaceRisk API — NextGen Galaxy 🌌',
+    'DESCRIPTION': 'Location intelligence platform using NASA Earth-observation data to evaluate environmental trends (NDVI, NDWI, NDBI, LST) for infrastructure planning.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
 }
 
 # Firebase Admin Initialization (Optional: place serviceAccountKey.json in backend directory)

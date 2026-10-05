@@ -159,6 +159,21 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
+### 📚 Interactive API Documentation (Swagger UI)
+
+When the Django backend is running, you can access the interactive Swagger UI and Redoc API documentation at:
+- **Swagger UI:** [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
+- **ReDoc UI:** [http://localhost:8000/redoc/](http://localhost:8000/redoc/)
+- **OpenAPI Schema (JSON/YAML):** [http://localhost:8000/api/schema/](http://localhost:8000/api/schema/)
+
+#### Designed Endpoints:
+- `GET /api/health/` — Backend & NASA connection status
+- `GET /api/apod/` — NASA Astronomy Picture of the Day
+- `POST /api/indicators/` — Multi-year NDVI, NDWI, NDBI, and LST satellite trend calculations
+- `POST /api/risk-analysis/` — SpaceRisk site evaluation for project types (warehouse, factory, solar farm)
+- `POST /api/site-comparison/` — Side-by-side comparison of candidate infrastructure sites
+
+
 ### 2. Mobile Setup (Flutter)
 
 ```bash
