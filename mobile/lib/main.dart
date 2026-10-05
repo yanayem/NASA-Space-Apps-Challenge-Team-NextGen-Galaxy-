@@ -1,21 +1,30 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'services/api_service.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/site_risk_screen.dart';
+import 'screens/site_comparison_screen.dart';
+import 'screens/indicators_screen.dart';
+import 'screens/reports_screen.dart';
+import 'screens/apod_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Firebase here when firebase_options.dart is configured:
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const NasaSpaceApp());
+  runApp(
+    ChangeNotifierProvider<ApiService>(
+      create: (_) => ApiService(),
+      child: const SpaceRiskApp(),
+    ),
+  );
 }
 
-class NasaSpaceApp extends StatelessWidget {
-  const NasaSpaceApp({super.key});
+class SpaceRiskApp extends StatelessWidget {
+  const SpaceRiskApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'NASA Space App',
+      title: 'SpaceRisk — Infrastructure Risk Intelligence',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF0B0E14),
@@ -28,179 +37,226 @@ class NasaSpaceApp extends StatelessWidget {
           backgroundColor: Color(0xFF151921),
           elevation: 0,
         ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF151921),
+          selectedItemColor: Color(0xFF3B82F6),
+          unselectedItemColor: Colors.white54,
+        ),
       ),
-      home: const HomeScreen(),
+      home: const MainNavigationContainer(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MainNavigationContainer extends StatefulWidget {
+  const MainNavigationContainer({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainNavigationContainer> createState() => _MainNavigationContainerState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  // Base URL for backend:
-  // Use your local Wi-Fi IP 'http://192.168.0.163:8000/api' for physical devices and emulators
-  static const String backendUrl = 'http://192.168.0.163:8000/api';
+class _MainNavigationContainerState extends State<MainNavigationContainer> {
+  int _currentIndex = 0;
 
-  Map<String, dynamic>? _apodData;
-  bool _isLoading = true;
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchApod();
+  void _navigateToTab(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
-  Future<void> _fetchApod() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+  void _showBackendSettingsDialog(BuildContext context, ApiService apiService) {
+    final controller = TextEditingController(text: apiService.backendUrl);
 
-    try {
-      final response = await http.get(Uri.parse('$backendUrl/apod/'));
-      if (response.statusCode == 200) {
-        setState(() {
-          _apodData = json.decode(response.body);
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Failed to load space data (Status: ${response.statusCode})';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Cannot connect to Django Backend at $backendUrl.\nError: $e';
-        _isLoading = false;
-      });
-    }
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF151921),
+          title: const Row(
+            children: [
+              Icon(Icons.settings, color: Color(0xFF3B82F6)),
+              SizedBox(width: 8),
+              Text('API & Seed Data Settings'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Django Backend API Endpoint URL:',
+                style: TextStyle(color: Colors.white70, fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: controller,
+                style: const TextStyle(color: Colors.white, fontSize: 13),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color(0xFF0B0E14),
+                  hintText: 'http://192.168.0.163:8000/api',
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFF222938)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              StatefulBuilder(
+                builder: (context, setLocalState) {
+                  return SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Force Seed & Demo Data Mode'),
+                    subtitle: const Text(
+                      'Use local rich seed datasets without contacting backend.',
+                      style: TextStyle(fontSize: 11, color: Colors.white54),
+                    ),
+                    value: apiService.useSeedDataMode,
+                    activeThumbColor: const Color(0xFF3B82F6),
+                    onChanged: (val) {
+                      apiService.setSeedDataMode(val);
+                      setLocalState(() {});
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3B82F6),
+              ),
+              onPressed: () {
+                apiService.setBackendUrl(controller.text);
+                Navigator.pop(ctx);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Backend settings updated successfully.')),
+                );
+              },
+              child: const Text('Save Settings'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final apiService = Provider.of<ApiService>(context);
+
+    final List<Widget> screens = [
+      DashboardScreen(onNavigateTab: _navigateToTab),
+      const SiteRiskScreen(),
+      const SiteComparisonScreen(),
+      const IndicatorsScreen(),
+      const ReportsScreen(),
+      const ApodScreen(),
+    ];
+
+    final List<String> titles = [
+      'SpaceRisk Dashboard',
+      'Site Risk Evaluation',
+      'Multi-Site Comparison Matrix',
+      'Satellite Environmental Trends',
+      'Executive Risk Reports',
+      'NASA Earth & Space Feed',
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.rocket_launch, color: Color(0xFF3B82F6)),
-            SizedBox(width: 8),
-            Text('NASA Space Explorer', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Icon(Icons.public, color: Color(0xFF3B82F6), size: 22),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                titles[_currentIndex],
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _fetchApod,
-            tooltip: 'Refresh Data',
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _errorMessage != null
-                ? _buildErrorWidget()
-                : _buildApodCard(),
-      ),
-    );
-  }
-
-  Widget _buildErrorWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.cloud_off, size: 64, color: Colors.amber),
-          const SizedBox(height: 16),
-          Text(
-            _errorMessage!,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white70),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            onPressed: _fetchApod,
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry Connection'),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildApodCard() {
-    if (_apodData == null) return const SizedBox.shrink();
-
-    final title = _apodData!['title'] ?? 'Astronomy Picture of the Day';
-    final explanation = _apodData!['explanation'] ?? '';
-    final imageUrl = _apodData!['url'] ?? '';
-    final date = _apodData!['date'] ?? '';
-
-    return SingleChildScrollView(
-      child: Card(
-        color: const Color(0xFF151921),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (imageUrl.isNotEmpty)
-              Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 200,
-                  color: Colors.grey[800],
-                  child: const Center(child: Icon(Icons.broken_image, size: 48)),
-                ),
+          if (apiService.useSeedDataMode || apiService.lastRequestWasDemo)
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF3B82F6).withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF3B82F6), width: 1),
               ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: const Row(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Chip(
-                        label: Text(date, style: const TextStyle(fontSize: 12)),
-                        backgroundColor: const Color(0xFF222938),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                  Icon(Icons.sd_card, color: Color(0xFF3B82F6), size: 12),
+                  SizedBox(width: 4),
                   Text(
-                    explanation,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                      color: Colors.white70,
+                    'SEED DATA',
+                    style: TextStyle(
+                      color: Color(0xFF3B82F6),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, size: 20),
+            onPressed: () => _showBackendSettingsDialog(context, apiService),
+            tooltip: 'API & Seed Settings',
+          ),
+        ],
+      ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex > 4 ? 0 : _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 11,
+        unselectedFontSize: 11,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_outlined),
+            activeIcon: Icon(Icons.dashboard),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics_outlined),
+            activeIcon: Icon(Icons.analytics),
+            label: 'Risk 0-100',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.compare_arrows_rounded),
+            activeIcon: Icon(Icons.compare_arrows),
+            label: 'Compare',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart_rounded),
+            activeIcon: Icon(Icons.show_chart),
+            label: 'Trends',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.picture_as_pdf_outlined),
+            activeIcon: Icon(Icons.picture_as_pdf),
+            label: 'Reports',
+          ),
+        ],
       ),
     );
   }
