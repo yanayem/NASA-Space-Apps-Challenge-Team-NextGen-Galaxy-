@@ -99,29 +99,30 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 
 ## 🏗️ Architecture & Technology Stack
 
-```
-+-------------------------------------------------------+
-|                 Flutter Mobile App                    |
-|  - Modern Dark Theme Space UI                         |
-|  - Firebase Auth & Cloud Messaging                    |
-|  - Site Comparison & Trend Visualizations             |
-+--------------------------+----------------------------+
-                           |
-            +--------------+--------------+
-            |                             |
-            v                             v
-+-----------------------+     +-----------------------+
-|  Firebase Services    |     | Django REST Backend   |
-|  - Firebase Auth      |     | - NASA / ESA API Feed |
-|  - Push Notifications |     | - Indicator Analytics |
-|  - Cloud Storage      |     | - Trend Computation   |
-+-----------+-----------+     +-----------+-----------+
-            |                             |
-            +--------------+--------------+
-                           |
-                           v
-              [ Firebase Admin SDK Verification ]
-```
+SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full-stack Earth-observation intelligence ecosystem combining NASA satellite pipelines, AI/NLG processing, and cloud distribution:
+
+### 1. 📱 Frontend & Visualization (Mobile):
+- **Flutter (Dart):** Cross-platform high-performance UI framework.
+- **Interactive Map Engine:** Precise Lat/Lon coordinates selection & polygon boundaries.
+- **FL Chart & Custom Gauges:** Interactive multi-year time-series trend plotting (NDVI, NDWI, NDBI, LST).
+
+### 2. ⚙️ Core Engine & Cloud Backend:
+- **Django REST Framework (DRF):** Robust Python RESTful API core.
+- **drf-spectacular (OpenAPI 3.0):** Interactive Swagger UI & ReDoc API documentation.
+- **Render Cloud Platform:** Production WSGI cloud hosting with 24/7 uptime.
+- **Gunicorn & WhiteNoise:** High-concurrency application server and static assets delivery.
+
+### 3. 🛰️ Satellite Pipelines & NASA Datasets:
+- **NASA Harmonized Landsat and Sentinel-2 (HLS):** 30m resolution Surface Reflectance (`HLSL30` / `HLSS30`).
+- **NASA APOD API:** Live daily astronomy feed.
+- **MODIS & VIIRS:** Surface thermal anomalies and Land Surface Temperature (LST).
+- **Google Earth Engine (GEE) / STAC API:** Multi-spectral spatial data queries.
+
+### 4. 🤖 AI, NLP & Export Services:
+- **Natural Language Generation (NLG):** Automated AI investment risk summaries & engineering mitigations.
+- **Project Weighting Algorithm:** Tailored risk matrix (Warehouse, Factory, Solar Farm, Data Center, Telecom).
+- **B2B PDF Report Engine:** Automated executive report generation.
+- **Firebase Admin & FCM:** Push notification alerts & cloud auth verification.
 
 ---
 
