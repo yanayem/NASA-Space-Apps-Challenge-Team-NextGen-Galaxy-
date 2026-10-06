@@ -223,7 +223,8 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Expanded(
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -239,7 +240,9 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
                     style: const TextStyle(color: Colors.white54, fontSize: 11),
                   ),
                 ],
+                ),
               ),
+              const SizedBox(width: 8),
               Chip(
                 label: Text(
                   _projectTypes[result.projectType] ?? result.projectType,
