@@ -378,6 +378,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       backgroundColor: isSelected
                           ? const Color(0xFF3B82F6)
                           : const Color(0xFF222938),
+                      foregroundColor: isSelected ? Colors.white : null,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       shape: RoundedRectangleBorder(

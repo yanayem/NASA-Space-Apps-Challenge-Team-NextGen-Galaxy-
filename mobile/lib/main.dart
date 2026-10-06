@@ -76,7 +76,7 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
             children: [
               Icon(Icons.settings, color: Color(0xFF3B82F6)),
               SizedBox(width: 8),
-              Text('API & Seed Data Settings'),
+              Expanded(child: Text('API & Seed Data Settings')),
             ],
           ),
           content: Column(
@@ -131,6 +131,7 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF3B82F6),
+                foregroundColor: Colors.white,
               ),
               onPressed: () {
                 apiService.setBackendUrl(controller.text);
