@@ -50,7 +50,7 @@ Instead of asking only *"What does this location look like?"*, SpaceRisk asks:
 ## 🛰️ NASA Data & Earth-System Indicators
 
 SpaceRisk leverages multi-source Earth-observation datasets:
-* **Satellite Datasets:** Landsat, Sentinel-2, MODIS, VIIRS, and Global Surface Water datasets.
+* **Satellite Datasets:** NASA Harmonized Landsat and Sentinel-2 (HLS) Surface Reflectance, MODIS, VIIRS, and Global Surface Water datasets.
 * **Environmental Indicators Analyzed:**
   * **NDVI (Normalized Difference Vegetation Index):** Monitors vegetation health and deforestation.
   * **NDWI (Normalized Difference Water Index):** Detects surface water dynamics and flood risks.
@@ -159,12 +159,19 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
-### 📚 Interactive API Documentation (Swagger UI)
+### 🌐 Live Production Backend (Render Cloud)
+- **Live Base API:** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
+- **Live Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
+- **Live ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
 
-When the Django backend is running, you can access the interactive Swagger UI and Redoc API documentation at:
-- **Swagger UI:** [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
-- **ReDoc UI:** [http://localhost:8000/redoc/](http://localhost:8000/redoc/)
-- **OpenAPI Schema (JSON/YAML):** [http://localhost:8000/api/schema/](http://localhost:8000/api/schema/)
+### 📚 Interactive API Documentation
+
+Access interactive Swagger UI and Redoc API documentation locally or on cloud:
+- **Swagger UI (Cloud):** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
+- **Swagger UI (Local):** [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
+- **ReDoc UI (Cloud):** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
+- **ReDoc UI (Local):** [http://localhost:8000/redoc/](http://localhost:8000/redoc/)
+- **OpenAPI Schema:** [https://spacerisk.onrender.com/api/schema/](https://spacerisk.onrender.com/api/schema/)
 
 #### Designed Endpoints:
 - `GET /api/health/` — Backend & NASA connection status

@@ -10,8 +10,8 @@ class ApiService extends ChangeNotifier {
   factory ApiService() => _instance;
   ApiService._internal();
 
-  // Backend URL (Default to local IP or localhost)
-  String _backendUrl = 'http://192.168.0.163:8000/api';
+  // Backend URL (Default to live Render cloud backend)
+  String _backendUrl = 'https://spacerisk.onrender.com/api';
   bool _useSeedDataMode = false;
   bool _lastRequestWasDemo = false;
 

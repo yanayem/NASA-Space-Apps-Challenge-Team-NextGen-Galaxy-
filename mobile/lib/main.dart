@@ -94,7 +94,7 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: const Color(0xFF0B0E14),
-                  hintText: 'http://192.168.0.163:8000/api',
+                  hintText: 'https://spacerisk.onrender.com/api',
                   hintStyle: const TextStyle(color: Colors.white38),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),

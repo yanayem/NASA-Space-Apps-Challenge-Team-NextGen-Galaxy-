@@ -100,7 +100,7 @@ def apod(request):
 @extend_schema(
     tags=['Earth-Observation Analytics'],
     summary='Get Environmental Indicators & Multi-Year Trends',
-    description='Analyzes multi-year historical trends (NDVI, NDWI, NDBI, LST, Thermal Anomalies) for target coordinates using Earth-observation datasets.',
+    description='Analyzes multi-year historical trends (NDVI, NDWI, NDBI, LST, Thermal Anomalies) for target coordinates using NASA Harmonized Landsat Sentinel-2 (HLS) Surface Reflectance datasets.',
     request=IndicatorRequestSerializer,
     responses={200: IndicatorResponseSerializer}
 )
@@ -291,7 +291,7 @@ def generate_risk_report(request):
         "report_id": f"SR-RPT-{report_id.upper()}",
         "site_name": data.get('site_name', 'Dhaka Site'),
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
-        "download_url": f"http://localhost:8000/api/reports/download/{report_id}/",
+        "download_url": request.build_absolute_uri(f"/api/reports/download/{report_id}/"),
         "summary": "Executive PDF report generated containing multi-year satellite trend charts, risk breakdowns, and actionable engineering recommendations."
     }
     return Response(response_data, status=status.HTTP_200_OK)

@@ -174,7 +174,7 @@ class SeedData {
       "report_id": "SR-RPT-8F3A2B",
       "site_name": siteName,
       "generated_at": "2026-03-30 14:30:00 UTC",
-      "download_url": "http://localhost:8000/api/reports/download/8f3a2b/",
+      "download_url": "https://spacerisk.onrender.com/api/reports/download/8f3a2b/",
       "summary": "Executive B2B SpaceRisk Assessment PDF generated successfully for $siteName ($projectType). Includes multi-year Earth observation trend analysis, flood & heat vulnerability breakdowns, and actionable engineering mitigations."
     };
   }
