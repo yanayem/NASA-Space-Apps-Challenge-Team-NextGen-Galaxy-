@@ -126,6 +126,37 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 
 ---
 
+## 🎨 B2B Enterprise Design System & Dual Theme Palette
+
+SpaceRisk avoids generic consumer AI gradients in favor of a mature **B2B Financial & Location Intelligence UI**—matching the clean standards of Palantir, Stripe, McKinsey Analytics, and ArcGIS Enterprise:
+
+### 1. ☀️ Primary Theme: Executive Enterprise Light Mode (Main B2B Focus)
+Designed for investment committees, infrastructure planners, and corporate decision-makers who require maximum readability and financial-report clarity.
+- **Page Background:** `#F8FAFC` *(Off-White Slate)*
+- **Card & Container Surface:** `#FFFFFF` *(Pure White with 1px `#E2E8F0` border & soft shadow)*
+- **Typography & Headers:** `#0F172A` *(Deep Sapphire Slate for crisp legibility)*
+- **Brand Primary Accent:** `#2563EB` *(Corporate Trust Blue)*
+- **Secondary Highlight Surface:** `#EFF6FF` *(Soft Blue Tint Container)*
+- **Financial Risk System Indicators:**
+  - 🟢 **Low Risk (Safe Investment):** `#059669` *(Emerald Green)*
+  - 🟡 **Moderate Risk (Caution / Mitigations Needed):** `#D97706` *(Amber Gold)*
+  - 🔴 **High / Extreme Risk (Severe Exposure):** `#DC2626` *(Crimson Red)*
+
+### 2. 🌙 Secondary Theme: Night Control Center Dark Mode
+Designed for field operations, low-light environments, and night-shift monitoring.
+- **Page Background:** `#0F172A` *(Slate 900)*
+- **Card & Container Surface:** `#1E293B` *(Slate 800 with `#334155` border)*
+- **Typography & Headers:** `#F8FAFC` *(Crisp Slate White)*
+- **Brand Primary Accent:** `#3B82F6` *(Control Blue)*
+
+### 📊 B2B Visual Elements & Layout Guidelines:
+- **Executive Summary Badge:** Clean white card displaying the SpaceRisk score (`42.5 / 100`) alongside high-contrast status tags (`[ MODERATE RISK ]`).
+- **Side-by-Side Comparison Matrix:** Financial-grade tabular data grid comparing 2 to 5 candidate sites.
+- **High-Contrast Trend Line Charts:** Sharp multi-year trend visualization for NDVI, NDWI, NDBI, and LST.
+- **Actionable Mitigation Cards:** Highlighted callouts offering clear, natural-language engineering recommendations.
+
+---
+
 ## 📂 Project Structure
 
 ```
