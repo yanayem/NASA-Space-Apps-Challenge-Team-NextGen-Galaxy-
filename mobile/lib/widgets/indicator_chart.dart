@@ -113,14 +113,18 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Multi-Year Satellite Trend — $_currentMetric',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                  Expanded(
+                    child: Text(
+                      'Multi-Year Satellite Trend — $_currentMetric',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   Text(
                     _getMetricUnit(),
                     style: const TextStyle(color: Colors.white54, fontSize: 12),
