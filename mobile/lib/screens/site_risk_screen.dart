@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../services/seed_data.dart';
 import '../models/risk_models.dart';
 import '../widgets/risk_gauge.dart';
+import '../theme/app_theme.dart';
 
 class SiteRiskScreen extends StatefulWidget {
   const SiteRiskScreen({super.key});
@@ -69,16 +70,16 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
           const SizedBox(height: 20),
 
           if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(32.0),
+            Padding(
+              padding: const EdgeInsets.all(32.0),
               child: Center(
                 child: Column(
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 12),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 12),
                     Text(
                       'Processing Earth-Observation Satellite Metrics...',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                      style: TextStyle(color: context.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),
@@ -108,23 +109,19 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
   Widget _buildSelectionCard() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.tune, color: Color(0xFF3B82F6), size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.tune, color: AppTheme.primaryBlue, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'Target Candidate Site & Project Parameters',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -133,26 +130,22 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
           const SizedBox(height: 16),
 
           // Candidate Site Selector
-          const Text('Select Target Site:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+          Text('Select Target Site:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0B0E14),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF222938)),
-            ),
+            decoration: context.subCardDecoration,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<CandidateSite>(
                 value: _selectedSite,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF151921),
+                dropdownColor: context.dropdownBg,
                 items: SeedData.sampleSites.map((site) {
                   return DropdownMenuItem<CandidateSite>(
                     value: site,
                     child: Text(
                       site.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      style: TextStyle(color: context.textPrimary, fontSize: 13),
                     ),
                   );
                 }).toList(),
@@ -170,26 +163,22 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
           const SizedBox(height: 12),
 
           // Infrastructure Project Type
-          const Text('Infrastructure Project Type:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+          Text('Infrastructure Project Type:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0B0E14),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF222938)),
-            ),
+            decoration: context.subCardDecoration,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _projectType,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF151921),
+                dropdownColor: context.dropdownBg,
                 items: _projectTypes.entries.map((e) {
                   return DropdownMenuItem<String>(
                     value: e.key,
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      style: TextStyle(color: context.textPrimary, fontSize: 13),
                     ),
                   );
                 }).toList(),
@@ -213,11 +202,7 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         children: [
           Row(
@@ -229,16 +214,16 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
                   children: [
                     Text(
                       result.siteName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: context.textPrimary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       'Coords: (${result.latitude}, ${result.longitude})',
-                      style: const TextStyle(color: Colors.white54, fontSize: 11),
+                      style: TextStyle(color: context.textSecondary, fontSize: 11),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -248,9 +233,10 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
               Chip(
                 label: Text(
                   _projectTypes[result.projectType] ?? result.projectType,
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: context.textPrimary),
                 ),
-                backgroundColor: const Color(0xFF222938),
+                backgroundColor: context.subCardBg,
+                side: BorderSide(color: context.cardBorder),
               ),
             ],
           ),
@@ -269,22 +255,22 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF3B82F6).withValues(alpha: 0.08),
+        color: AppTheme.primaryBlue.withValues(alpha: context.isDarkMode ? 0.08 : 0.06),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF3B82F6).withValues(alpha: 0.3)),
+        border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.psychology, color: Color(0xFF3B82F6), size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.psychology, color: AppTheme.primaryBlue, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'AI Investment & Site Recommendation',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -294,7 +280,7 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
           Text(
             result.aiInvestmentSummary,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.87),
+              color: context.textSecondary,
               fontSize: 13,
               height: 1.5,
             ),
@@ -310,38 +296,34 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Sub-Risk Hazard Breakdown',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 15,
                 ),
               ),
               Text(
                 'Project Tailored Weights',
-                style: TextStyle(color: Colors.white54, fontSize: 11),
+                style: TextStyle(color: context.textSecondary, fontSize: 11),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          _buildRiskBar('Flood Exposure (NDWI)', sub.floodRisk, w['flood'] ?? 0.25, const Color(0xFF06B6D4)),
-          _buildRiskBar('Urban Heat Island (LST)', sub.heatRisk, w['heat'] ?? 0.20, const Color(0xFFEF4444)),
-          _buildRiskBar('Environmental Volatility', sub.envChangeRisk, w['env_change'] ?? 0.15, const Color(0xFFA855F7)),
-          _buildRiskBar('Water Surface Fluctuations', sub.waterChangeRisk, w['water_change'] ?? 0.15, const Color(0xFF3B82F6)),
-          _buildRiskBar('Thermal / Fire Anomalies', sub.thermalEventRisk, w['thermal'] ?? 0.10, const Color(0xFFF59E0B)),
-          _buildRiskBar('Land & Geotechnical Stability', sub.siteStability, w['stability'] ?? 0.15, const Color(0xFF10B981)),
+          _buildRiskBar('Flood Exposure (NDWI)', sub.floodRisk, w['flood'] ?? 0.25, AppTheme.accentCyan),
+          _buildRiskBar('Urban Heat Island (LST)', sub.heatRisk, w['heat'] ?? 0.20, AppTheme.accentRed),
+          _buildRiskBar('Environmental Volatility', sub.envChangeRisk, w['env_change'] ?? 0.15, AppTheme.accentPurple),
+          _buildRiskBar('Water Surface Fluctuations', sub.waterChangeRisk, w['water_change'] ?? 0.15, AppTheme.primaryBlue),
+          _buildRiskBar('Thermal / Fire Anomalies', sub.thermalEventRisk, w['thermal'] ?? 0.10, AppTheme.accentAmber),
+          _buildRiskBar('Land & Geotechnical Stability', sub.siteStability, w['stability'] ?? 0.15, AppTheme.accentEmerald),
         ],
       ),
     );
@@ -360,7 +342,7 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  style: TextStyle(color: context.textPrimary, fontSize: 12),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -370,12 +352,13 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF222938),
+                      color: context.subCardBg,
                       borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: context.cardBorder),
                     ),
                     child: Text(
                       'Weight: $weightPct%',
-                      style: const TextStyle(color: Colors.white54, fontSize: 10),
+                      style: TextStyle(color: context.textSecondary, fontSize: 10),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -397,7 +380,7 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
             child: LinearProgressIndicator(
               value: (score / 100.0).clamp(0.0, 1.0),
               minHeight: 8,
-              backgroundColor: const Color(0xFF222938),
+              backgroundColor: context.subCardBg,
               valueColor: AlwaysStoppedAnimation<Color>(color),
             ),
           ),
@@ -409,23 +392,19 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
   Widget _buildMitigationsCard(RiskAnalysisResult result) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.build_outlined, color: Color(0xFF10B981), size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.build_outlined, color: AppTheme.accentEmerald, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'Actionable Engineering Mitigations',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -440,15 +419,15 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
                 children: [
                   const Icon(
                     Icons.check_circle_outline,
-                    color: Color(0xFF10B981),
+                    color: AppTheme.accentEmerald,
                     size: 18,
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       item,
-                      style: const TextStyle(
-                        color: Colors.white70,
+                      style: TextStyle(
+                        color: context.textSecondary,
                         fontSize: 12.5,
                         height: 1.4,
                       ),
