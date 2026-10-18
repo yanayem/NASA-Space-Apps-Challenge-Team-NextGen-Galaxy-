@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/risk_models.dart';
+import '../theme/app_theme.dart';
 
 class ApodScreen extends StatefulWidget {
   const ApodScreen({super.key});
@@ -56,22 +57,22 @@ class _ApodScreenState extends State<ApodScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.rocket_launch, color: Color(0xFF3B82F6)),
-                  SizedBox(width: 8),
+                  const Icon(Icons.rocket_launch, color: AppTheme.primaryBlue),
+                  const SizedBox(width: 8),
                   Text(
                     'NASA Earth & Space Feed',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: context.textPrimary,
                     ),
                   ),
                 ],
               ),
               IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.white70),
+                icon: Icon(Icons.refresh, color: context.textSecondary),
                 onPressed: _fetchApod,
                 tooltip: 'Refresh Feed',
               ),
@@ -80,16 +81,16 @@ class _ApodScreenState extends State<ApodScreen> {
           const SizedBox(height: 16),
 
           if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(32.0),
+            Padding(
+              padding: const EdgeInsets.all(32.0),
               child: Center(
                 child: Column(
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 12),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 12),
                     Text(
                       'Fetching Astronomy Picture of the Day from NASA...',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                      style: TextStyle(color: context.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),
@@ -99,11 +100,11 @@ class _ApodScreenState extends State<ApodScreen> {
             Center(
               child: Column(
                 children: [
-                  const Icon(Icons.cloud_off, size: 48, color: Colors.amber),
+                  const Icon(Icons.cloud_off, size: 48, color: AppTheme.accentAmber),
                   const SizedBox(height: 12),
                   Text(
                     _errorMessage!,
-                    style: const TextStyle(color: Colors.white70),
+                    style: TextStyle(color: context.textSecondary),
                   ),
                   const SizedBox(height: 12),
                   ElevatedButton(
@@ -122,11 +123,12 @@ class _ApodScreenState extends State<ApodScreen> {
 
   Widget _buildApodCard(ApodData data) {
     return Card(
-      color: const Color(0xFF151921),
+      color: context.cardBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Color(0xFF222938)),
+        side: BorderSide(color: context.cardBorder),
       ),
+      elevation: context.isDarkMode ? 0 : 2,
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,16 +141,16 @@ class _ApodScreenState extends State<ApodScreen> {
               height: 240,
               errorBuilder: (context, error, stackTrace) => Container(
                 height: 200,
-                color: Colors.grey[850],
-                child: const Center(
+                color: context.subCardBg,
+                child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.public, size: 48, color: Color(0xFF3B82F6)),
-                      SizedBox(height: 8),
+                      const Icon(Icons.public, size: 48, color: AppTheme.primaryBlue),
+                      const SizedBox(height: 8),
                       Text(
                         'NASA Earth Observation Feed',
-                        style: TextStyle(color: Colors.white70),
+                        style: TextStyle(color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -166,29 +168,30 @@ class _ApodScreenState extends State<ApodScreen> {
                     Expanded(
                       child: Text(
                         data.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: context.textPrimary,
                         ),
                       ),
                     ),
                     Chip(
                       label: Text(
                         data.date,
-                        style: const TextStyle(fontSize: 11, color: Colors.white70),
+                        style: TextStyle(fontSize: 11, color: context.textSecondary),
                       ),
-                      backgroundColor: const Color(0xFF222938),
+                      backgroundColor: context.subCardBg,
+                      side: BorderSide(color: context.cardBorder),
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Text(
                   data.explanation,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13.5,
                     height: 1.5,
-                    color: Colors.white70,
+                    color: context.textSecondary,
                   ),
                 ),
               ],
