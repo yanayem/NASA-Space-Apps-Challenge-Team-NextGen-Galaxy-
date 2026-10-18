@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/api_service.dart';
+import 'theme/app_theme.dart';
+import 'theme/theme_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/site_risk_screen.dart';
 import 'screens/site_comparison_screen.dart';
 import 'screens/indicators_screen.dart';
 import 'screens/reports_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/apod_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    ChangeNotifierProvider<ApiService>(
-      create: (_) => ApiService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ApiService>(create: (_) => ApiService()),
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
+      ],
       child: const SpaceRiskApp(),
     ),
   );
@@ -23,26 +29,14 @@ class SpaceRiskApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'SpaceRisk — Infrastructure Risk Intelligence',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF0B0E14),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF3B82F6),
-          secondary: Color(0xFF8B5CF6),
-          surface: Color(0xFF151921),
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF151921),
-          elevation: 0,
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF151921),
-          selectedItemColor: Color(0xFF3B82F6),
-          unselectedItemColor: Colors.white54,
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeProvider.themeMode,
       home: const MainNavigationContainer(),
     );
   }
@@ -64,93 +58,11 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
     });
   }
 
-  void _showBackendSettingsDialog(BuildContext context, ApiService apiService) {
-    final controller = TextEditingController(text: apiService.backendUrl);
-
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF151921),
-          title: const Row(
-            children: [
-              Icon(Icons.settings, color: Color(0xFF3B82F6)),
-              SizedBox(width: 8),
-              Expanded(child: Text('API & Seed Data Settings')),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Django Backend API Endpoint URL:',
-                style: TextStyle(color: Colors.white70, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: controller,
-                style: const TextStyle(color: Colors.white, fontSize: 13),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color(0xFF0B0E14),
-                  hintText: 'https://spacerisk.onrender.com/api',
-                  hintStyle: const TextStyle(color: Colors.white38),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFF222938)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              StatefulBuilder(
-                builder: (context, setLocalState) {
-                  return SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Force Seed & Demo Data Mode'),
-                    subtitle: const Text(
-                      'Use local rich seed datasets without contacting backend.',
-                      style: TextStyle(fontSize: 11, color: Colors.white54),
-                    ),
-                    value: apiService.useSeedDataMode,
-                    activeThumbColor: const Color(0xFF3B82F6),
-                    onChanged: (val) {
-                      apiService.setSeedDataMode(val);
-                      setLocalState(() {});
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3B82F6),
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                apiService.setBackendUrl(controller.text);
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Backend settings updated successfully.')),
-                );
-              },
-              child: const Text('Save Settings'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final apiService = Provider.of<ApiService>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final List<Widget> screens = [
       DashboardScreen(onNavigateTab: _navigateToTab),
@@ -158,6 +70,7 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
       const SiteComparisonScreen(),
       const IndicatorsScreen(),
       const ReportsScreen(),
+      const SettingsScreen(),
       const ApodScreen(),
     ];
 
@@ -167,6 +80,7 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
       'Multi-Site Comparison Matrix',
       'Satellite Environmental Trends',
       'Executive Risk Reports',
+      'Settings & System Engine',
       'NASA Earth & Space Feed',
     ];
 
@@ -174,11 +88,11 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.public, color: Color(0xFF3B82F6), size: 22),
+            const Icon(Icons.public, color: AppTheme.primaryBlue, size: 22),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                titles[_currentIndex],
+                titles[_currentIndex < titles.length ? _currentIndex : 0],
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -186,23 +100,24 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
           ],
         ),
         actions: [
+          // Seed Data Badge
           if (apiService.useSeedDataMode || apiService.lastRequestWasDemo)
             Container(
               margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: const Color(0xFF3B82F6).withValues(alpha: 0.2),
+                color: AppTheme.primaryBlue.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF3B82F6), width: 1),
+                border: Border.all(color: AppTheme.primaryBlue, width: 1),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.sd_card, color: Color(0xFF3B82F6), size: 12),
+                  Icon(Icons.sd_card, color: AppTheme.primaryBlue, size: 12),
                   SizedBox(width: 4),
                   Text(
                     'SEED DATA',
                     style: TextStyle(
-                      color: Color(0xFF3B82F6),
+                      color: AppTheme.primaryBlue,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),
@@ -210,19 +125,40 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
                 ],
               ),
             ),
+
+          // Quick Theme Toggle Button (Light/Dark switch right in AppBar)
           IconButton(
-            icon: const Icon(Icons.settings_outlined, size: 20),
-            onPressed: () => _showBackendSettingsDialog(context, apiService),
-            tooltip: 'API & Seed Settings',
+            icon: Icon(
+              isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+              size: 20,
+              color: isDark ? AppTheme.accentAmber : AppTheme.primaryBlue,
+            ),
+            onPressed: () => themeProvider.toggleTheme(context),
+            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+          ),
+
+          // Settings Action Button
+          IconButton(
+            icon: Icon(
+              _currentIndex == 5 ? Icons.tune : Icons.tune_outlined,
+              size: 20,
+              color: _currentIndex == 5 ? AppTheme.primaryBlue : null,
+            ),
+            onPressed: () {
+              setState(() {
+                _currentIndex = 5;
+              });
+            },
+            tooltip: 'App & Backend Settings',
           ),
         ],
       ),
       body: IndexedStack(
-        index: _currentIndex,
+        index: _currentIndex < screens.length ? _currentIndex : 0,
         children: screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex > 4 ? 0 : _currentIndex,
+        currentIndex: _currentIndex > 5 ? 0 : _currentIndex,
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 11,
         unselectedFontSize: 11,
@@ -256,6 +192,11 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
             icon: Icon(Icons.picture_as_pdf_outlined),
             activeIcon: Icon(Icons.picture_as_pdf),
             label: 'Reports',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.tune_outlined),
+            activeIcon: Icon(Icons.tune),
+            label: 'Settings',
           ),
         ],
       ),
