@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/risk_models.dart';
+import '../theme/app_theme.dart';
 
 class IndicatorTrendChart extends StatefulWidget {
   final List<IndicatorTrendItem> items;
@@ -74,12 +75,19 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
   @override
   Widget build(BuildContext context) {
     if (widget.items.isEmpty) {
-      return const Center(child: Text("No satellite data points available."));
+      return Center(
+        child: Text(
+          "No satellite data points available.",
+          style: TextStyle(color: context.textSecondary),
+        ),
+      );
     }
 
     final values = _getMetricValues();
     final years = widget.items.map((e) => e.year.toString()).toList();
     final chartColor = _getMetricColor();
+    final gridColor = context.isDarkMode ? const Color(0xFF222938) : const Color(0xFFE2E8F0);
+    final labelColor = context.isDarkMode ? Colors.white54 : const Color(0xFF64748B);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,11 +110,7 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
         const SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF151921),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFF222938)),
-          ),
+          decoration: context.cardDecoration,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -116,8 +120,8 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
                   Expanded(
                     child: Text(
                       'Multi-Year Satellite Trend — $_currentMetric',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: context.textPrimary,
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
@@ -127,7 +131,7 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
                   const SizedBox(width: 8),
                   Text(
                     _getMetricUnit(),
-                    style: const TextStyle(color: Colors.white54, fontSize: 12),
+                    style: TextStyle(color: context.textSecondary, fontSize: 12),
                   ),
                 ],
               ),
@@ -140,6 +144,9 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
                     values: values,
                     years: years,
                     lineColor: chartColor,
+                    gridColor: gridColor,
+                    labelColor: labelColor,
+                    pointCenterColor: context.cardBg,
                   ),
                 ),
               ),
@@ -156,16 +163,16 @@ class _IndicatorTrendChartState extends State<IndicatorTrendChart> {
       selected: isSelected,
       label: Text(label),
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : Colors.white70,
+        color: isSelected ? Colors.white : context.textSecondary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 12,
       ),
-      selectedColor: color.withValues(alpha: 0.8),
-      backgroundColor: const Color(0xFF151921),
+      selectedColor: color.withValues(alpha: 0.85),
+      backgroundColor: context.subCardBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? color : const Color(0xFF222938),
+          color: isSelected ? color : context.cardBorder,
         ),
       ),
       onSelected: (_) {
@@ -181,19 +188,25 @@ class _LineChartPainter extends CustomPainter {
   final List<double> values;
   final List<String> years;
   final Color lineColor;
+  final Color gridColor;
+  final Color labelColor;
+  final Color pointCenterColor;
 
   _LineChartPainter({
     required this.values,
     required this.years,
     required this.lineColor,
+    required this.gridColor,
+    required this.labelColor,
+    required this.pointCenterColor,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (values.isEmpty) return;
 
-    final double paddingBottom = 24.0;
-    final double paddingTop = 16.0;
+    const double paddingBottom = 24.0;
+    const double paddingTop = 16.0;
     final double chartHeight = size.height - paddingBottom - paddingTop;
     final double chartWidth = size.width;
 
@@ -207,7 +220,7 @@ class _LineChartPainter extends CustomPainter {
 
     // Grid lines background
     final gridPaint = Paint()
-      ..color = const Color(0xFF222938)
+      ..color = gridColor
       ..strokeWidth = 1.0;
 
     for (int i = 0; i <= 3; i++) {
@@ -269,13 +282,13 @@ class _LineChartPainter extends CustomPainter {
       canvas.drawCircle(
         points[i],
         2.5,
-        Paint()..color = Colors.white,
+        Paint()..color = pointCenterColor,
       );
 
       // Year Label below
       textPainter.text = TextSpan(
         text: years[i],
-        style: const TextStyle(color: Colors.white54, fontSize: 10),
+        style: TextStyle(color: labelColor, fontSize: 10),
       );
       textPainter.layout();
       textPainter.paint(
@@ -302,6 +315,9 @@ class _LineChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LineChartPainter oldDelegate) {
-    return oldDelegate.values != values || oldDelegate.lineColor != lineColor;
+    return oldDelegate.values != values ||
+        oldDelegate.lineColor != lineColor ||
+        oldDelegate.gridColor != gridColor ||
+        oldDelegate.labelColor != labelColor;
   }
 }

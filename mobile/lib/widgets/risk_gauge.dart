@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class RiskGaugeWidget extends StatelessWidget {
   final double score;
@@ -24,6 +25,7 @@ class RiskGaugeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getRiskColor(score);
+    final trackColor = context.isDarkMode ? const Color(0xFF222938) : const Color(0xFFE2E8F0);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -39,6 +41,7 @@ class RiskGaugeWidget extends StatelessWidget {
                 painter: _GaugePainter(
                   score: score,
                   gaugeColor: color,
+                  trackColor: trackColor,
                 ),
               ),
               Column(
@@ -49,7 +52,7 @@ class RiskGaugeWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: size * 0.22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: context.textPrimary,
                       letterSpacing: -1,
                     ),
                   ),
@@ -57,7 +60,7 @@ class RiskGaugeWidget extends StatelessWidget {
                     '/ 100',
                     style: TextStyle(
                       fontSize: size * 0.08,
-                      color: Colors.white54,
+                      color: context.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -108,8 +111,13 @@ class RiskGaugeWidget extends StatelessWidget {
 class _GaugePainter extends CustomPainter {
   final double score;
   final Color gaugeColor;
+  final Color trackColor;
 
-  _GaugePainter({required this.score, required this.gaugeColor});
+  _GaugePainter({
+    required this.score,
+    required this.gaugeColor,
+    required this.trackColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -120,7 +128,7 @@ class _GaugePainter extends CustomPainter {
 
     // Background track
     final bgPaint = Paint()
-      ..color = const Color(0xFF222938)
+      ..color = trackColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 14
       ..strokeCap = StrokeCap.round;
@@ -152,6 +160,8 @@ class _GaugePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _GaugePainter oldDelegate) {
-    return oldDelegate.score != score || oldDelegate.gaugeColor != gaugeColor;
+    return oldDelegate.score != score ||
+        oldDelegate.gaugeColor != gaugeColor ||
+        oldDelegate.trackColor != trackColor;
   }
 }
