@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/seed_data.dart';
 import '../models/risk_models.dart';
+import '../theme/app_theme.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -66,16 +67,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
           const SizedBox(height: 20),
 
           if (_isGenerating)
-            const Padding(
-              padding: EdgeInsets.all(32.0),
+            Padding(
+              padding: const EdgeInsets.all(32.0),
               child: Center(
                 child: Column(
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 12),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 12),
                     Text(
                       'Compiling B2B Executive Investment Risk PDF Report...',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                      style: TextStyle(color: context.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),
@@ -92,23 +93,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Widget _buildControlsCard() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.picture_as_pdf_outlined, color: Color(0xFFF59E0B), size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.picture_as_pdf_outlined, color: AppTheme.accentAmber, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'B2B Executive Risk Report Generator',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -117,26 +114,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
           const SizedBox(height: 14),
 
           // Select Target Site
-          const Text('Select Target Site:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+          Text('Select Target Site:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0B0E14),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF222938)),
-            ),
+            decoration: context.subCardDecoration,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<CandidateSite>(
                 value: _selectedSite,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF151921),
+                dropdownColor: context.dropdownBg,
                 items: SeedData.sampleSites.map((site) {
                   return DropdownMenuItem<CandidateSite>(
                     value: site,
                     child: Text(
                       site.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      style: TextStyle(color: context.textPrimary, fontSize: 13),
                     ),
                   );
                 }).toList(),
@@ -153,26 +146,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
           const SizedBox(height: 12),
 
           // Infrastructure Project Type
-          const Text('Infrastructure Project Type:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+          Text('Infrastructure Project Type:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0B0E14),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF222938)),
-            ),
+            decoration: context.subCardDecoration,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _projectType,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF151921),
+                dropdownColor: context.dropdownBg,
                 items: _projectTypes.entries.map((e) {
                   return DropdownMenuItem<String>(
                     value: e.key,
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      style: TextStyle(color: context.textPrimary, fontSize: 13),
                     ),
                   );
                 }).toList(),
@@ -193,7 +182,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             height: 44,
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF59E0B),
+                backgroundColor: AppTheme.accentAmber,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -216,9 +205,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF151921),
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
+        border: Border.all(color: AppTheme.accentAmber.withValues(alpha: 0.4)),
+        boxShadow: context.isDarkMode
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,13 +227,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF59E0B).withValues(alpha: 0.2),
+                  color: AppTheme.accentAmber.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   report.reportId,
                   style: const TextStyle(
-                    color: Color(0xFFF59E0B),
+                    color: AppTheme.accentAmber,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -243,7 +241,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
               Text(
                 report.generatedAt,
-                style: const TextStyle(color: Colors.white54, fontSize: 11),
+                style: TextStyle(color: context.textSecondary, fontSize: 11),
               ),
             ],
           ),
@@ -251,34 +249,34 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
           Text(
             report.siteName,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: context.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             'Infrastructure Category: ${_projectTypes[_projectType] ?? _projectType}',
-            style: const TextStyle(color: Colors.white60, fontSize: 12),
+            style: TextStyle(color: context.textSecondary, fontSize: 12),
           ),
           const SizedBox(height: 16),
 
-          const Divider(color: Color(0xFF222938)),
+          Divider(color: context.cardBorder),
           const SizedBox(height: 12),
 
-          const Text(
+          Text(
             'Executive Assessment Summary:',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: context.textPrimary,
               fontSize: 13,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             report.summary,
-            style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.5),
+            style: TextStyle(color: context.textSecondary, fontSize: 13, height: 1.5),
           ),
           const SizedBox(height: 20),
 
@@ -287,8 +285,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
             height: 46,
             child: OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFFF59E0B)),
-                foregroundColor: const Color(0xFFF59E0B),
+                side: const BorderSide(color: AppTheme.accentAmber),
+                foregroundColor: AppTheme.accentAmber,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

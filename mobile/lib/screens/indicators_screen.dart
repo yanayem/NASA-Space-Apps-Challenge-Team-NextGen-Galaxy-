@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../services/seed_data.dart';
 import '../models/risk_models.dart';
 import '../widgets/indicator_chart.dart';
+import '../theme/app_theme.dart';
 
 class IndicatorsScreen extends StatefulWidget {
   const IndicatorsScreen({super.key});
@@ -60,16 +61,16 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
           const SizedBox(height: 20),
 
           if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(32.0),
+            Padding(
+              padding: const EdgeInsets.all(32.0),
               child: Center(
                 child: Column(
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 12),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 12),
                     Text(
                       'Fetching NASA Landsat & Sentinel Multi-Year Time-Series...',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                      style: TextStyle(color: context.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),
@@ -98,23 +99,19 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
   Widget _buildFilterCard() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.satellite_alt_outlined, color: Color(0xFF10B981), size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.satellite_alt_outlined, color: AppTheme.accentEmerald, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'NASA Earth Observation Time-Series Controls',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -123,26 +120,22 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
           const SizedBox(height: 14),
 
           // Target Site Dropdown
-          const Text('Select Target Site:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+          Text('Select Target Site:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0B0E14),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF222938)),
-            ),
+            decoration: context.subCardDecoration,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<CandidateSite>(
                 value: _selectedSite,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF151921),
+                dropdownColor: context.dropdownBg,
                 items: SeedData.sampleSites.map((site) {
                   return DropdownMenuItem<CandidateSite>(
                     value: site,
                     child: Text(
                       site.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      style: TextStyle(color: context.textPrimary, fontSize: 13),
                     ),
                   );
                 }).toList(),
@@ -163,11 +156,11 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Analysis Period:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+              Text('Analysis Period:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
               Text(
                 '${_startYear.toInt()} — ${_endYear.toInt()}',
                 style: const TextStyle(
-                  color: Color(0xFF10B981),
+                  color: AppTheme.accentEmerald,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -179,8 +172,8 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
             min: 2018,
             max: 2024,
             divisions: 6,
-            activeColor: const Color(0xFF10B981),
-            inactiveColor: const Color(0xFF222938),
+            activeColor: AppTheme.accentEmerald,
+            inactiveColor: context.isDarkMode ? const Color(0xFF222938) : const Color(0xFFE2E8F0),
             labels: RangeLabels(
               _startYear.toInt().toString(),
               _endYear.toInt().toString(),
@@ -202,22 +195,22 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF10B981).withValues(alpha: 0.08),
+        color: AppTheme.accentEmerald.withValues(alpha: context.isDarkMode ? 0.08 : 0.06),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.3)),
+        border: Border.all(color: AppTheme.accentEmerald.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.auto_graph, color: Color(0xFF10B981), size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.auto_graph, color: AppTheme.accentEmerald, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'Multi-Year Remote Sensing Summary',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -227,7 +220,7 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
           Text(
             resp.summary,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.87),
+              color: context.textSecondary,
               fontSize: 13,
               height: 1.5,
             ),
@@ -238,21 +231,19 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
   }
 
   Widget _buildDatapointsTable(IndicatorResponse resp) {
+    final headerRowColor = context.isDarkMode ? const Color(0xFF222938) : const Color(0xFFE2E8F0);
+
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151921),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF222938)),
-      ),
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Raw Annual Observation Log',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: context.textPrimary,
               fontSize: 15,
             ),
           ),
@@ -263,23 +254,23 @@ class _IndicatorsScreenState extends State<IndicatorsScreen> {
               columnSpacing: 18,
               headingRowHeight: 38,
               dataRowMinHeight: 44,
-              headingRowColor: WidgetStateProperty.all(const Color(0xFF222938)),
-              columns: const [
-                DataColumn(label: Text('Year', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-                DataColumn(label: Text('NDVI', style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold))),
-                DataColumn(label: Text('NDWI', style: TextStyle(color: Color(0xFF06B6D4), fontWeight: FontWeight.bold))),
-                DataColumn(label: Text('NDBI', style: TextStyle(color: Color(0xFFF59E0B), fontWeight: FontWeight.bold))),
-                DataColumn(label: Text('LST (°C)', style: TextStyle(color: Color(0xFFEF4444), fontWeight: FontWeight.bold))),
-                DataColumn(label: Text('Anomalies', style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold))),
+              headingRowColor: WidgetStateProperty.all(headerRowColor),
+              columns: [
+                DataColumn(label: Text('Year', style: TextStyle(color: context.textPrimary, fontWeight: FontWeight.bold))),
+                const DataColumn(label: Text('NDVI', style: TextStyle(color: AppTheme.accentEmerald, fontWeight: FontWeight.bold))),
+                const DataColumn(label: Text('NDWI', style: TextStyle(color: AppTheme.accentCyan, fontWeight: FontWeight.bold))),
+                const DataColumn(label: Text('NDBI', style: TextStyle(color: AppTheme.accentAmber, fontWeight: FontWeight.bold))),
+                const DataColumn(label: Text('LST (°C)', style: TextStyle(color: AppTheme.accentRed, fontWeight: FontWeight.bold))),
+                const DataColumn(label: Text('Anomalies', style: TextStyle(color: AppTheme.accentPurple, fontWeight: FontWeight.bold))),
               ],
               rows: resp.indicators.map((item) {
                 return DataRow(cells: [
-                  DataCell(Text('${item.year}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-                  DataCell(Text('${item.ndvi}', style: const TextStyle(color: Colors.white70))),
-                  DataCell(Text('${item.ndwi}', style: const TextStyle(color: Colors.white70))),
-                  DataCell(Text('${item.ndbi}', style: const TextStyle(color: Colors.white70))),
-                  DataCell(Text('${item.lstCelsius}°C', style: const TextStyle(color: Colors.white70))),
-                  DataCell(Text('${item.thermalAnomalies}', style: const TextStyle(color: Colors.white70))),
+                  DataCell(Text('${item.year}', style: TextStyle(color: context.textPrimary, fontWeight: FontWeight.bold))),
+                  DataCell(Text('${item.ndvi}', style: TextStyle(color: context.textSecondary))),
+                  DataCell(Text('${item.ndwi}', style: TextStyle(color: context.textSecondary))),
+                  DataCell(Text('${item.ndbi}', style: TextStyle(color: context.textSecondary))),
+                  DataCell(Text('${item.lstCelsius}°C', style: TextStyle(color: context.textSecondary))),
+                  DataCell(Text('${item.thermalAnomalies}', style: TextStyle(color: context.textSecondary))),
                 ]);
               }).toList(),
             ),
