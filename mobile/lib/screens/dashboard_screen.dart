@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import '../services/seed_data.dart';
 import '../models/risk_models.dart';
+import '../models/preset_sites.dart';
 import '../theme/app_theme.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -15,7 +15,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final ApiService _apiService = ApiService();
-  CandidateSite _selectedPreset = SeedData.sampleSites[0];
+  CandidateSite _selectedPreset = PresetSites.sampleSites[0];
   bool _isBackendConnected = false;
 
   @override
@@ -25,6 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _checkBackendStatus() async {
+    await _apiService.autoDetectBestBackend();
     final isConnected = await _apiService.checkHealth();
     if (mounted) {
       setState(() {
@@ -40,8 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Banner for Seed/Demo Data Mode
-          _buildModeStatusCard(),
+          // Banner for API Connection Status
+          _buildConnectionStatusCard(),
           const SizedBox(height: 16),
 
           // Header Hero Section
@@ -81,11 +82,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildModeStatusCard() {
-    final useSeed = _apiService.useSeedDataMode;
-    final primaryColor = useSeed
-        ? AppTheme.primaryBlue
-        : (_isBackendConnected ? AppTheme.accentEmerald : AppTheme.accentAmber);
+  Widget _buildConnectionStatusCard() {
+    final primaryColor = _isBackendConnected ? AppTheme.accentEmerald : AppTheme.accentAmber;
+    final isLocal = _apiService.backendUrl.contains('10.0.2.2') || _apiService.backendUrl.contains('127.0.0.1');
+
+    final serverLabel = _isBackendConnected
+        ? (isLocal ? 'Connected to Localhost Backend (PC)' : 'Connected to Render Cloud (Production)')
+        : 'Backend Server Offline or Unreachable';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -99,9 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Row(
         children: [
           Icon(
-            useSeed
-                ? Icons.dataset_linked
-                : (_isBackendConnected ? Icons.cloud_done : Icons.wifi_off),
+            _isBackendConnected ? (isLocal ? Icons.computer : Icons.cloud_done) : Icons.wifi_off,
             color: primaryColor,
             size: 22,
           ),
@@ -111,11 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  useSeed
-                      ? 'Seed & Demo Data Mode Active'
-                      : (_isBackendConnected
-                          ? 'Connected to SpaceRisk REST API'
-                          : 'Backend Offline — Auto Seed Mode Active'),
+                  serverLabel,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: context.textPrimary,
@@ -123,23 +120,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 Text(
-                  useSeed
-                      ? 'Using rich offline seed datasets for demonstration.'
-                      : (_isBackendConnected
-                          ? 'Live NASA Earth-Observation data pipeline ready.'
-                          : 'Serving local seed & demo data seamlessly.'),
+                  _isBackendConnected
+                      ? 'Active Base URL: ${_apiService.backendUrl}'
+                      : 'Check network connection or backend status.',
                   style: TextStyle(color: context.textSecondary, fontSize: 11),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Switch(
-            value: useSeed,
-            onChanged: (val) {
-              setState(() {
-                _apiService.setSeedDataMode(val);
-              });
-            },
+          IconButton(
+            icon: const Icon(Icons.refresh, size: 20),
+            onPressed: _checkBackendStatus,
+            tooltip: 'Re-check Connection',
           ),
         ],
       ),
@@ -220,57 +213,73 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildFeatureGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 1.35,
-      children: [
-        _buildFeatureCard(
-          title: 'Site Risk Analysis',
-          subtitle: 'Evaluate 0-100 Score',
-          icon: Icons.analytics_outlined,
-          color: AppTheme.primaryBlue,
-          onTap: () => widget.onNavigateTab(1),
-        ),
-        _buildFeatureCard(
-          title: 'Site Comparison',
-          subtitle: 'Compare 2-5 Locations',
-          icon: Icons.compare_arrows_rounded,
-          color: AppTheme.accentPurple,
-          onTap: () => widget.onNavigateTab(2),
-        ),
-        _buildFeatureCard(
-          title: 'Satellite Trends',
-          subtitle: 'NDVI, NDWI, LST °C',
-          icon: Icons.show_chart_rounded,
-          color: AppTheme.accentEmerald,
-          onTap: () => widget.onNavigateTab(3),
-        ),
-        _buildFeatureCard(
-          title: 'B2B PDF Reports',
-          subtitle: 'Executive Summary',
-          icon: Icons.picture_as_pdf_outlined,
-          color: AppTheme.accentAmber,
-          onTap: () => widget.onNavigateTab(4),
-        ),
-        _buildFeatureCard(
-          title: 'App Settings & Themes',
-          subtitle: 'Light/Dark & Config',
-          icon: Icons.tune_rounded,
-          color: AppTheme.accentCyan,
-          onTap: () => widget.onNavigateTab(5),
-        ),
-        _buildFeatureCard(
-          title: 'NASA Space Feed',
-          subtitle: 'APOD Astronomy',
-          icon: Icons.auto_awesome,
-          color: const Color(0xFFEC4899),
-          onTap: () => widget.onNavigateTab(6),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        int crossAxisCount = 2;
+        double childAspectRatio = 1.6;
+
+        if (width > 900) {
+          crossAxisCount = 4;
+          childAspectRatio = 2.0;
+        } else if (width > 600) {
+          crossAxisCount = 3;
+          childAspectRatio = 1.8;
+        }
+
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: childAspectRatio,
+          children: [
+            _buildFeatureCard(
+              title: 'Site Risk Analysis',
+              subtitle: 'Evaluate 0-100 Score',
+              icon: Icons.analytics_outlined,
+              color: AppTheme.primaryBlue,
+              onTap: () => widget.onNavigateTab(1),
+            ),
+            _buildFeatureCard(
+              title: 'Site Comparison',
+              subtitle: 'Compare 2-5 Locations',
+              icon: Icons.compare_arrows_rounded,
+              color: AppTheme.accentPurple,
+              onTap: () => widget.onNavigateTab(2),
+            ),
+            _buildFeatureCard(
+              title: 'Satellite Trends',
+              subtitle: 'NDVI, NDWI, LST °C',
+              icon: Icons.show_chart_rounded,
+              color: AppTheme.accentEmerald,
+              onTap: () => widget.onNavigateTab(3),
+            ),
+            _buildFeatureCard(
+              title: 'B2B PDF Reports',
+              subtitle: 'Executive Summary',
+              icon: Icons.picture_as_pdf_outlined,
+              color: AppTheme.accentAmber,
+              onTap: () => widget.onNavigateTab(4),
+            ),
+            _buildFeatureCard(
+              title: 'App Settings & Themes',
+              subtitle: 'Light/Dark & Config',
+              icon: Icons.tune_rounded,
+              color: AppTheme.accentCyan,
+              onTap: () => widget.onNavigateTab(5),
+            ),
+            _buildFeatureCard(
+              title: 'NASA Space Feed',
+              subtitle: 'APOD Astronomy',
+              icon: Icons.auto_awesome,
+              color: const Color(0xFFEC4899),
+              onTap: () => widget.onNavigateTab(6),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -289,34 +298,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
         decoration: context.cardDecoration,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: color, size: 22),
+              child: Icon(icon, color: color, size: 20),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: context.textPrimary,
-                    fontSize: 13,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  subtitle,
-                  style: TextStyle(color: context.textSecondary, fontSize: 11),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            const SizedBox(height: 6),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: context.textPrimary,
+                fontSize: 12.5,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: TextStyle(color: context.textSecondary, fontSize: 10.5),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ],
         ),
@@ -326,7 +334,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildPresetSiteList() {
     return Column(
-      children: SeedData.sampleSites.map((site) {
+      children: PresetSites.sampleSites.map((site) {
         final isSelected = _selectedPreset.id == site.id;
         return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
@@ -443,21 +451,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           Divider(color: context.cardBorder, height: 20),
           _buildStatusRow(
-            'Django REST API',
-            _isBackendConnected ? 'Online (HTTP 200)' : 'Offline / Seed Fallback',
-            _isBackendConnected ? AppTheme.accentEmerald : AppTheme.accentAmber,
+            'Django REST API Engine',
+            _isBackendConnected ? 'Online (HTTP 200)' : 'Offline',
+            _isBackendConnected ? AppTheme.accentEmerald : AppTheme.accentRed,
           ),
           const SizedBox(height: 8),
           _buildStatusRow(
-            'NASA Earthdata Feed',
+            'NASA Earthdata Pipeline',
             'Landsat 8/9, Sentinel & VIIRS Active',
             AppTheme.primaryBlue,
-          ),
-          const SizedBox(height: 8),
-          _buildStatusRow(
-            'Seed Dataset Pipeline',
-            'Pre-seeded Multi-Year Data Active',
-            AppTheme.accentEmerald,
           ),
         ],
       ),
