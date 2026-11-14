@@ -85,6 +85,8 @@ class RiskAnalysisResult {
   final Map<String, double> projectAdjustedWeights;
   final String aiInvestmentSummary;
   final List<String> actionableMitigations;
+  final String? hlsReferenceTile;
+  final List<String> activeNasaCatalogs;
 
   const RiskAnalysisResult({
     required this.siteName,
@@ -97,6 +99,8 @@ class RiskAnalysisResult {
     required this.projectAdjustedWeights,
     required this.aiInvestmentSummary,
     required this.actionableMitigations,
+    this.hlsReferenceTile,
+    this.activeNasaCatalogs = const [],
   });
 
   factory RiskAnalysisResult.fromJson(Map<String, dynamic> json) {
@@ -119,6 +123,8 @@ class RiskAnalysisResult {
       projectAdjustedWeights: parsedWeights,
       aiInvestmentSummary: json['ai_investment_summary'] ?? '',
       actionableMitigations: List<String>.from(json['actionable_mitigations'] ?? []),
+      hlsReferenceTile: json['hls_reference_tile'],
+      activeNasaCatalogs: List<String>.from(json['active_nasa_catalogs'] ?? []),
     );
   }
 }
@@ -223,11 +229,47 @@ class IndicatorTrendItem {
   }
 }
 
+class NasaGranuleItem {
+  final String collection;
+  final String collectionName;
+  final String provider;
+  final String catalogUrl;
+  final String granuleId;
+  final String? timeStart;
+  final String? browseUrl;
+
+  const NasaGranuleItem({
+    required this.collection,
+    required this.collectionName,
+    required this.provider,
+    required this.catalogUrl,
+    required this.granuleId,
+    this.timeStart,
+    this.browseUrl,
+  });
+
+  factory NasaGranuleItem.fromJson(Map<String, dynamic> json) {
+    return NasaGranuleItem(
+      collection: json['collection'] ?? '',
+      collectionName: json['collection_name'] ?? '',
+      provider: json['provider'] ?? '',
+      catalogUrl: json['catalog_url'] ?? '',
+      granuleId: json['granule_id'] ?? '',
+      timeStart: json['time_start'],
+      browseUrl: json['browse_url'],
+    );
+  }
+}
+
 class IndicatorResponse {
   final double latitude;
   final double longitude;
   final String region;
   final String period;
+  final String datasetSource;
+  final String? hlsTileId;
+  final List<String> nasaCatalogs;
+  final List<NasaGranuleItem> nasaGranules;
   final List<IndicatorTrendItem> indicators;
   final String summary;
 
@@ -236,6 +278,10 @@ class IndicatorResponse {
     required this.longitude,
     required this.region,
     required this.period,
+    this.datasetSource = 'NASA Harmonized Landsat Sentinel-2 (HLS)',
+    this.hlsTileId,
+    this.nasaCatalogs = const [],
+    this.nasaGranules = const [],
     required this.indicators,
     required this.summary,
   });
@@ -246,11 +292,19 @@ class IndicatorResponse {
     List<IndicatorTrendItem> items =
         rawItems.map((e) => IndicatorTrendItem.fromJson(e)).toList();
 
+    var rawGranules = json['nasa_granules'] as List? ?? [];
+    List<NasaGranuleItem> granules =
+        rawGranules.map((e) => NasaGranuleItem.fromJson(e)).toList();
+
     return IndicatorResponse(
       latitude: (loc['latitude'] as num?)?.toDouble() ?? 23.8103,
       longitude: (loc['longitude'] as num?)?.toDouble() ?? 90.4125,
       region: loc['region'] ?? 'Target Zone',
       period: json['period'] ?? '2018-2024',
+      datasetSource: json['dataset_source'] ?? 'NASA Harmonized Landsat Sentinel-2 (HLS)',
+      hlsTileId: json['hls_tile_id'],
+      nasaCatalogs: List<String>.from(json['nasa_catalogs'] ?? []),
+      nasaGranules: granules,
       indicators: items,
       summary: json['summary'] ?? '',
     );
