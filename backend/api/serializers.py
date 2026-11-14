@@ -1,5 +1,11 @@
 from rest_framework import serializers
 
+class ApiRootResponseSerializer(serializers.Serializer):
+    message = serializers.CharField(help_text="Welcome message")
+    status = serializers.CharField(help_text="Operational status")
+    documentation = serializers.DictField(help_text="Links to API documentation")
+    endpoints = serializers.DictField(help_text="Map of active API endpoints")
+
 class HealthCheckResponseSerializer(serializers.Serializer):
     status = serializers.CharField(help_text="Status of the backend server (e.g. online)")
     app = serializers.CharField(help_text="Application name")
@@ -33,6 +39,10 @@ class IndicatorTrendItemSerializer(serializers.Serializer):
 class IndicatorResponseSerializer(serializers.Serializer):
     location = serializers.DictField(help_text="Target location metadata")
     period = serializers.CharField(help_text="Analyzed multi-year period")
+    dataset_source = serializers.CharField(required=False, default="NASA Harmonized Landsat Sentinel-2 (HLS) & OPERA DSWx")
+    hls_tile_id = serializers.CharField(required=False, allow_null=True)
+    nasa_catalogs = serializers.ListField(child=serializers.CharField(), required=False)
+    nasa_granules = serializers.ListField(child=serializers.DictField(), required=False)
     indicators = IndicatorTrendItemSerializer(many=True)
     summary = serializers.CharField(help_text="Summary of observed satellite trends")
 
@@ -69,6 +79,8 @@ class RiskAnalysisResponseSerializer(serializers.Serializer):
     project_adjusted_weights = serializers.DictField(help_text="Risk weights tailored to project type")
     ai_investment_summary = serializers.CharField(help_text="AI generated investment risk recommendation")
     actionable_mitigations = serializers.ListField(child=serializers.CharField())
+    hls_reference_tile = serializers.CharField(required=False, allow_null=True)
+    active_nasa_catalogs = serializers.ListField(child=serializers.CharField(), required=False)
 
 class LocationItemSerializer(serializers.Serializer):
     site_name = serializers.CharField(default="Site A", help_text="Identifier for the candidate site")
