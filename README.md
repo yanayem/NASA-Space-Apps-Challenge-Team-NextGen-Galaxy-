@@ -6,6 +6,15 @@ A location intelligence platform powered by Earth-observation data to help decis
 
 ---
 
+## 🌐 Live Deployment Links
+
+* 🌐 **Web Application (Vercel):** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
+* ⚙️ **Backend REST API (Render):** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
+* 📚 **Interactive Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
+* 📖 **Interactive ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
+
+---
+
 ## 👥 Team NextGen Galaxy
 
 | Name | Role |
@@ -211,8 +220,9 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
-### 🌐 Live Production Backend (Render Cloud)
-- **Live Base API:** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
+### 🌐 Live Production Deployments
+- **Live Web Application (Vercel):** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
+- **Live Base API (Render):** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
 - **Live Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
 - **Live ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
 

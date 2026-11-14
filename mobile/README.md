@@ -1,17 +1,28 @@
-# mobile
+# SpaceRisk — Mobile & Web Client 🚀
 
-A new Flutter project.
+> **Before You Build. Know the Risk.**
 
-## Getting Started
+SpaceRisk Flutter Web & Mobile Client for location intelligence powered by Earth-observation data.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🌐 Live Application & Backend URLs
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+* 🌐 **Live Web App:** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
+* ⚙️ **Live Backend API:** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
+* 📚 **Live Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🛠️ How to Run Locally
+
+```bash
+# Get dependencies
+flutter pub get
+
+# Run on Web (Chrome)
+flutter run -d chrome
+
+# Build for Web Production
+flutter build web --release
+```
