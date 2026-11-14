@@ -41,7 +41,7 @@ void main() {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
-          home: const SettingsScreen(),
+          home: const Scaffold(body: SettingsScreen()),
         ),
       ),
     );
