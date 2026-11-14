@@ -1,0 +1,102 @@
+[
+  {
+    "site_id": "dhaka_central",
+    "site_name": "Dhaka Central Logistics Corridor",
+    "division": "Dhaka",
+    "latitude": 23.8103,
+    "longitude": 90.4125,
+    "elevation_m": 8.0,
+    "soil_stability_index": 0.68,
+    "hls_tile_id": "T45QZG",
+    "historical_trends": [
+      {"year": 2018, "ndvi": 0.38, "ndwi": -0.04, "ndbi": 0.32, "lst_celsius": 30.2, "annual_rainfall_mm": 2050},
+      {"year": 2019, "ndvi": 0.35, "ndwi": -0.02, "ndbi": 0.35, "lst_celsius": 30.8, "annual_rainfall_mm": 2180},
+      {"year": 2020, "ndvi": 0.33, "ndwi": 0.01, "ndbi": 0.38, "lst_celsius": 31.4, "annual_rainfall_mm": 2290},
+      {"year": 2021, "ndvi": 0.30, "ndwi": 0.03, "ndbi": 0.41, "lst_celsius": 32.0, "annual_rainfall_mm": 2110},
+      {"year": 2022, "ndvi": 0.28, "ndwi": 0.05, "ndbi": 0.44, "lst_celsius": 32.7, "annual_rainfall_mm": 2340},
+      {"year": 2023, "ndvi": 0.26, "ndwi": 0.07, "ndbi": 0.47, "lst_celsius": 33.3, "annual_rainfall_mm": 2410},
+      {"year": 2024, "ndvi": 0.24, "ndwi": 0.09, "ndbi": 0.50, "lst_celsius": 33.9, "annual_rainfall_mm": 2480}
+    ],
+    "nasa_sensors": ["HLS.L30", "HLS.S30", "MODIS_Terra_LST", "VIIRS_VNP14A1"]
+  },
+  {
+    "site_id": "ctg_port",
+    "site_name": "Chattogram Port Coastal Industrial Belt",
+    "division": "Chattogram",
+    "latitude": 22.3569,
+    "longitude": 91.7832,
+    "elevation_m": 6.5,
+    "soil_stability_index": 0.62,
+    "hls_tile_id": "T46QBF",
+    "historical_trends": [
+      {"year": 2018, "ndvi": 0.48, "ndwi": 0.12, "ndbi": 0.24, "lst_celsius": 28.5, "annual_rainfall_mm": 2980},
+      {"year": 2019, "ndvi": 0.46, "ndwi": 0.14, "ndbi": 0.27, "lst_celsius": 28.9, "annual_rainfall_mm": 3100},
+      {"year": 2020, "ndvi": 0.44, "ndwi": 0.16, "ndbi": 0.30, "lst_celsius": 29.4, "annual_rainfall_mm": 3250},
+      {"year": 2021, "ndvi": 0.42, "ndwi": 0.18, "ndbi": 0.33, "lst_celsius": 29.9, "annual_rainfall_mm": 3050},
+      {"year": 2022, "ndvi": 0.40, "ndwi": 0.20, "ndbi": 0.36, "lst_celsius": 30.5, "annual_rainfall_mm": 3320},
+      {"year": 2023, "ndvi": 0.38, "ndwi": 0.22, "ndbi": 0.39, "lst_celsius": 31.0, "annual_rainfall_mm": 3410},
+      {"year": 2024, "ndvi": 0.36, "ndwi": 0.25, "ndbi": 0.42, "lst_celsius": 31.6, "annual_rainfall_mm": 3500}
+    ],
+    "nasa_sensors": ["HLS.L30", "HLS.S30", "MODIS_Aqua_LST", "VIIRS_VNP14A1"]
+  },
+  {
+    "site_id": "gazipur_park",
+    "site_name": "Gazipur High-Tech Solar Zone",
+    "division": "Dhaka",
+    "latitude": 23.9999,
+    "longitude": 90.4203,
+    "elevation_m": 12.0,
+    "soil_stability_index": 0.81,
+    "hls_tile_id": "T45QZH",
+    "historical_trends": [
+      {"year": 2018, "ndvi": 0.62, "ndwi": -0.15, "ndbi": 0.12, "lst_celsius": 29.1, "annual_rainfall_mm": 1950},
+      {"year": 2019, "ndvi": 0.59, "ndwi": -0.13, "ndbi": 0.15, "lst_celsius": 29.6, "annual_rainfall_mm": 2010},
+      {"year": 2020, "ndvi": 0.56, "ndwi": -0.11, "ndbi": 0.19, "lst_celsius": 30.1, "annual_rainfall_mm": 2080},
+      {"year": 2021, "ndvi": 0.53, "ndwi": -0.09, "ndbi": 0.23, "lst_celsius": 30.7, "annual_rainfall_mm": 1990},
+      {"year": 2022, "ndvi": 0.50, "ndwi": -0.07, "ndbi": 0.27, "lst_celsius": 31.2, "annual_rainfall_mm": 2120},
+      {"year": 2023, "ndvi": 0.47, "ndwi": -0.05, "ndbi": 0.31, "lst_celsius": 31.8, "annual_rainfall_mm": 2180},
+      {"year": 2024, "ndvi": 0.44, "ndwi": -0.03, "ndbi": 0.35, "lst_celsius": 32.4, "annual_rainfall_mm": 2230}
+    ],
+    "nasa_sensors": ["HLS.L30", "HLS.S30", "MODIS_Terra_LST"]
+  },
+  {
+    "site_id": "sylhet_tech",
+    "site_name": "Sylhet Eco-Tech Valley",
+    "division": "Sylhet",
+    "latitude": 24.8949,
+    "longitude": 91.8687,
+    "elevation_m": 22.0,
+    "soil_stability_index": 0.88,
+    "hls_tile_id": "T46QCE",
+    "historical_trends": [
+      {"year": 2018, "ndvi": 0.72, "ndwi": -0.06, "ndbi": 0.08, "lst_celsius": 27.2, "annual_rainfall_mm": 3850},
+      {"year": 2019, "ndvi": 0.70, "ndwi": -0.04, "ndbi": 0.11, "lst_celsius": 27.6, "annual_rainfall_mm": 3990},
+      {"year": 2020, "ndvi": 0.68, "ndwi": -0.02, "ndbi": 0.14, "lst_celsius": 28.1, "annual_rainfall_mm": 4120},
+      {"year": 2021, "ndvi": 0.66, "ndwi": 0.00, "ndbi": 0.17, "lst_celsius": 28.6, "annual_rainfall_mm": 3920},
+      {"year": 2022, "ndvi": 0.63, "ndwi": 0.02, "ndbi": 0.20, "lst_celsius": 29.1, "annual_rainfall_mm": 4250},
+      {"year": 2023, "ndvi": 0.61, "ndwi": 0.04, "ndbi": 0.23, "lst_celsius": 29.7, "annual_rainfall_mm": 4380},
+      {"year": 2024, "ndvi": 0.58, "ndwi": 0.06, "ndbi": 0.26, "lst_celsius": 30.2, "annual_rainfall_mm": 4450}
+    ],
+    "nasa_sensors": ["HLS.L30", "HLS.S30", "MODIS_Terra_LST", "VIIRS_VNP14A1"]
+  },
+  {
+    "site_id": "khulna_eco",
+    "site_name": "Khulna Delta River Basin",
+    "division": "Khulna",
+    "latitude": 22.8456,
+    "longitude": 89.5403,
+    "elevation_m": 4.5,
+    "soil_stability_index": 0.55,
+    "hls_tile_id": "T45QWG",
+    "historical_trends": [
+      {"year": 2018, "ndvi": 0.52, "ndwi": 0.16, "ndbi": 0.18, "lst_celsius": 28.9, "annual_rainfall_mm": 2100},
+      {"year": 2019, "ndvi": 0.50, "ndwi": 0.18, "ndbi": 0.21, "lst_celsius": 29.3, "annual_rainfall_mm": 2220},
+      {"year": 2020, "ndvi": 0.48, "ndwi": 0.21, "ndbi": 0.24, "lst_celsius": 29.8, "annual_rainfall_mm": 2360},
+      {"year": 2021, "ndvi": 0.45, "ndwi": 0.23, "ndbi": 0.28, "lst_celsius": 30.4, "annual_rainfall_mm": 2180},
+      {"year": 2022, "ndvi": 0.43, "ndwi": 0.26, "ndbi": 0.31, "lst_celsius": 31.0, "annual_rainfall_mm": 2420},
+      {"year": 2023, "ndvi": 0.40, "ndwi": 0.29, "ndbi": 0.35, "lst_celsius": 31.6, "annual_rainfall_mm": 2510},
+      {"year": 2024, "ndvi": 0.38, "ndwi": 0.32, "ndbi": 0.39, "lst_celsius": 32.2, "annual_rainfall_mm": 2600}
+    ],
+    "nasa_sensors": ["HLS.L30", "HLS.S30", "MODIS_Aqua_LST"]
+  }
+]
