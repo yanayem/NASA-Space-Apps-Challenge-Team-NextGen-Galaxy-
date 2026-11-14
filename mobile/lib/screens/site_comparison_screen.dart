@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import '../services/seed_data.dart';
 import '../models/risk_models.dart';
+import '../models/preset_sites.dart';
 import '../theme/app_theme.dart';
 
 class SiteComparisonScreen extends StatefulWidget {
@@ -15,13 +15,14 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
   final ApiService _apiService = ApiService();
 
   final List<CandidateSite> _selectedSites = [
-    SeedData.sampleSites[0],
-    SeedData.sampleSites[1],
-    SeedData.sampleSites[3],
+    PresetSites.sampleSites[0],
+    PresetSites.sampleSites[1],
+    PresetSites.sampleSites[3],
   ];
 
   String _projectType = 'warehouse';
   bool _isLoading = false;
+  String? _errorMessage;
   SiteComparisonResponse? _comparisonResponse;
 
   final Map<String, String> _projectTypes = {
@@ -46,7 +47,11 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
     try {
       final res = await _apiService.compareSites(
         projectType: _projectType,
@@ -60,7 +65,10 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() {
+          _errorMessage = 'Failed to run site comparison ($e)';
+          _isLoading = false;
+        });
       }
     }
   }
@@ -110,6 +118,34 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
                     Text(
                       'Running Multi-Site Satellite Comparison Engine...',
                       style: TextStyle(color: context.textSecondary, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else if (_errorMessage != null)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: context.cardDecoration,
+                child: Column(
+                  children: [
+                    const Icon(Icons.cloud_off, size: 44, color: AppTheme.accentAmber),
+                    const SizedBox(height: 12),
+                    Text(
+                      _errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: context.textSecondary, fontSize: 13),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryBlue,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _runComparison,
+                      icon: const Icon(Icons.refresh, size: 18),
+                      label: const Text('Retry Comparison'),
                     ),
                   ],
                 ),
@@ -187,6 +223,7 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
                           child: Text(
                             e.value,
                             style: TextStyle(color: context.textPrimary, fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         );
                       }).toList(),
@@ -211,7 +248,7 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
           Wrap(
             spacing: 8,
             runSpacing: 6,
-            children: SeedData.sampleSites.map((site) {
+            children: PresetSites.sampleSites.map((site) {
               final isSelected = _selectedSites.contains(site);
               return FilterChip(
                 selected: isSelected,
@@ -310,6 +347,7 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
 
   Widget _buildMatrixTable(SiteComparisonResponse resp) {
     final headerRowColor = context.isDarkMode ? const Color(0xFF222938) : const Color(0xFFE2E8F0);
+    final borderColor = context.cardBorder;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -317,74 +355,166 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Side-by-Side Matrix Comparison',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: context.textPrimary,
-              fontSize: 15,
-            ),
-          ),
-          const SizedBox(height: 14),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columnSpacing: 20,
-              headingRowHeight: 40,
-              dataRowMinHeight: 48,
-              headingRowColor: WidgetStateProperty.all(headerRowColor),
-              columns: [
-                DataColumn(
-                  label: Text(
-                    'Metric',
-                    style: TextStyle(color: context.textPrimary, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  'Side-by-Side Matrix Comparison',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: context.textPrimary,
+                    fontSize: 15,
                   ),
                 ),
-                ...resp.comparisonResults.map((e) {
-                  final isRec = e.siteName == resp.recommendedSite;
-                  return DataColumn(
-                    label: Text(
-                      isRec ? '${e.siteName} ⭐' : e.siteName,
-                      style: TextStyle(
-                        color: isRec ? AppTheme.accentEmerald : context.textPrimary,
-                        fontWeight: FontWeight.bold,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.swipe_left_rounded, size: 14, color: context.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Swipe table →',
+                    style: TextStyle(color: context.textMuted, fontSize: 11, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: borderColor),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header Row
+                    Container(
+                      color: headerRowColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            child: Text(
+                              'Metric',
+                              style: TextStyle(
+                                color: context.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          ...resp.comparisonResults.map((e) {
+                            final isRec = e.siteName == resp.recommendedSite;
+                            return Container(
+                              width: 140,
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (isRec)
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 4),
+                                      child: Icon(Icons.star_rounded, color: AppTheme.accentEmerald, size: 16),
+                                    ),
+                                  Expanded(
+                                    child: Text(
+                                      e.siteName,
+                                      style: TextStyle(
+                                        color: isRec ? AppTheme.accentEmerald : context.textPrimary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
                       ),
                     ),
-                  );
-                }),
-              ],
-              rows: [
-                DataRow(cells: [
-                  DataCell(Text('SpaceRisk Score', style: TextStyle(color: context.textSecondary))),
-                  ...resp.comparisonResults.map((e) => DataCell(
-                        Text(
-                          '${e.spaceRiskScore}',
-                          style: TextStyle(
-                            color: e.spaceRiskScore < 50 ? AppTheme.accentEmerald : AppTheme.accentRed,
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                    // Data Rows
+                    _buildMatrixRow('SpaceRisk Score', resp.comparisonResults, (item) {
+                      return Text(
+                        '${item.spaceRiskScore}',
+                        style: TextStyle(
+                          color: item.spaceRiskScore < 50 ? AppTheme.accentEmerald : AppTheme.accentRed,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
                         ),
-                      )),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('Risk Category', style: TextStyle(color: context.textSecondary))),
-                  ...resp.comparisonResults.map((e) => DataCell(Text(e.riskLevel, style: TextStyle(color: context.textPrimary)))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('Flood Risk', style: TextStyle(color: context.textSecondary))),
-                  ...resp.comparisonResults.map((e) => DataCell(Text('${e.floodRisk}', style: TextStyle(color: context.textSecondary)))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('Heat Risk', style: TextStyle(color: context.textSecondary))),
-                  ...resp.comparisonResults.map((e) => DataCell(Text('${e.heatRisk}', style: TextStyle(color: context.textSecondary)))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('Water Volatility', style: TextStyle(color: context.textSecondary))),
-                  ...resp.comparisonResults.map((e) => DataCell(Text('${e.waterChange}', style: TextStyle(color: context.textSecondary)))),
-                ]),
-              ],
+                      );
+                    }, isFirst: true),
+
+                    _buildMatrixRow('Risk Category', resp.comparisonResults, (item) {
+                      return Text(
+                        item.riskLevel,
+                        style: TextStyle(color: context.textPrimary, fontSize: 12, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    }),
+
+                    _buildMatrixRow('Flood Risk', resp.comparisonResults, (item) {
+                      return Text('${item.floodRisk}', style: TextStyle(color: context.textSecondary, fontSize: 12));
+                    }),
+
+                    _buildMatrixRow('Heat Risk', resp.comparisonResults, (item) {
+                      return Text('${item.heatRisk}', style: TextStyle(color: context.textSecondary, fontSize: 12));
+                    }),
+
+                    _buildMatrixRow('Water Volatility', resp.comparisonResults, (item) {
+                      return Text('${item.waterChange}', style: TextStyle(color: context.textSecondary, fontSize: 12));
+                    }, isLast: true),
+                  ],
+                ),
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMatrixRow(
+    String metricName,
+    List<SiteComparisonItem> items,
+    Widget Function(SiteComparisonItem) cellBuilder, {
+    bool isFirst = false,
+    bool isLast = false,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        border: isLast ? null : Border(bottom: BorderSide(color: context.cardBorder.withValues(alpha: 0.5))),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              metricName,
+              style: TextStyle(color: context.textSecondary, fontSize: 12, fontWeight: isFirst ? FontWeight.w600 : FontWeight.normal),
+            ),
+          ),
+          ...items.map((item) {
+            return SizedBox(
+              width: 140,
+              child: cellBuilder(item),
+            );
+          }),
         ],
       ),
     );
@@ -424,11 +554,14 @@ class _SiteComparisonScreenState extends State<SiteComparisonScreen> {
                           color: context.textPrimary,
                           fontSize: 15,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
