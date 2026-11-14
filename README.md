@@ -129,7 +129,7 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 
 SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full-stack Earth-observation intelligence ecosystem combining NASA satellite pipelines, AI/NLG processing, and cloud distribution:
 
-### 1. 📱 Frontend & Visualization (Mobile):
+### 1. 📱 Frontend & Visualization (Mobile & Web):
 - **Flutter (Dart 3.x):** Cross-platform high-performance UI framework supporting Web, Android, iOS, and Desktop.
 - **Interactive Map Engine:** Precise Lat/Lon coordinate selection & polygon boundaries.
 - **FL Chart & Custom Gauges:** Interactive multi-year time-series trend plotting (NDVI, NDWI, NDBI, LST).
@@ -152,6 +152,27 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 - **Project Weighting Algorithm:** Tailored risk matrix (Warehouse, Factory, Solar Farm, Data Center, Telecom).
 - **B2B PDF Report Engine:** Automated executive report generation.
 - **Firebase Admin & FCM:** Push notification alerts & cloud auth verification.
+
+---
+
+## 🛠️ Detailed Technology Stack & Software Tools Matrix
+
+| Layer | Tool / Technology | Purpose & Description |
+| :--- | :--- | :--- |
+| **Frontend Framework** | **Flutter (Dart 3.x)** | High-performance cross-platform application for Web, Android, iOS, & Desktop |
+| **State & Theme** | **Provider & SharedPreferences** | Reactive state handling & persistent system theme mode listener |
+| **Data Visualization** | **FL Chart Library** | Interactive multi-line time-series trend visualization for satellite indices |
+| **Backend Core** | **Python 3.11+ & Django DRF** | High-performance RESTful backend API engine for MCDA calculations |
+| **API Documentation** | **drf-spectacular (OpenAPI 3.0)** | Auto-generated interactive Swagger UI and ReDoc documentation portals |
+| **Web Application Server**| **Gunicorn & WhiteNoise** | High-concurrency production WSGI server and static asset delivery |
+| **Cloud Hosting (Web)** | **Vercel Cloud Platform** | Global CDN deployment for Flutter Web frontend |
+| **Cloud Hosting (API)** | **Render Cloud Platform** | Production 24/7 cloud server deployment for Django backend |
+| **Earth Observation Data**| **NASA HLS (HLSL30 / HLSS30)** | 30m Harmonized Landsat-Sentinel surface reflectance catalogs |
+| **Water Risk Engine** | **OPERA DSWx-HLS (POCLOUD)** | Dynamic surface water extent and seasonal inundation detection |
+| **Thermal Risk Engine** | **MODIS Terra/Aqua & VIIRS** | Land Surface Temperature (LST in °C) & thermal anomaly tracking |
+| **Real-Time CMR API** | **NASA CMR Search Endpoint** | Live granule metadata and acquisition timestamp querying |
+| **Astronomy Feed** | **NASA APOD API** | Daily NASA astronomy feed and scientific explanations |
+| **Testing & QA** | **Django Test & Flutter Test** | Automated API unit testing, MCDA validation, and widget smoke testing |
 
 ---
 
