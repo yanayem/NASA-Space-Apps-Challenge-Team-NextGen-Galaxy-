@@ -47,15 +47,34 @@ Instead of asking only *"What does this location look like?"*, SpaceRisk asks:
 
 ---
 
-## 🛰️ NASA Data & Earth-System Indicators
+## 🛰️ Integrated NASA Datasets & Earth-Observation Catalogs
 
-SpaceRisk leverages multi-source Earth-observation datasets:
-* **Satellite Datasets:** NASA Harmonized Landsat and Sentinel-2 (HLS) Surface Reflectance, MODIS, VIIRS, and Global Surface Water datasets.
-* **Environmental Indicators Analyzed:**
-  * **NDVI (Normalized Difference Vegetation Index):** Monitors vegetation health and deforestation.
-  * **NDWI (Normalized Difference Water Index):** Detects surface water dynamics and flood risks.
-  * **NDBI (Normalized Difference Built-up Index):** Tracks urban expansion and land transformation.
-  * **LST (Land Surface Temperature):** Evaluates thermal profiles and urban heat islands.
+SpaceRisk integrates live NASA Earthdata catalogs, satellite metadata APIs, and multi-year temporal datasets:
+
+### 1. NASA Harmonized Landsat and Sentinel-2 (HLS) Surface Reflectance
+* **`HLSL30 v2.0` (LPCLOUD):** Landsat 30m Surface Reflectance — Used for **NDBI** (Built-up Index) and urban expansion tracking.
+  * [Catalog Link](https://www.earthdata.nasa.gov/data/catalog/lpcloud-hlsl30-2.0)
+* **`HLSS30 v2.0` (LPCLOUD):** Sentinel-2 30m Surface Reflectance — Used for **NDVI** (Vegetation Canopy Index) and **NDWI** (Water Index).
+  * [Catalog Link](https://www.earthdata.nasa.gov/data/catalog/lpcloud-hlss30-2.0)
+* **`HLSL30_VI v2.0` (LPCLOUD):** Landsat Vegetation Indices — Tracks deforestation and canopy degradation.
+  * [Catalog Link](https://www.earthdata.nasa.gov/data/catalog/lpcloud-hlsl30-vi-2.0)
+
+### 2. OPERA Dynamic Surface Water Extent
+* **`OPERA_L3_DSWX-HLS_V1` (POCLOUD):** OPERA Level-3 Surface Water Extent from HLS — Detects dynamic inundation, seasonal flood hazards, and surface water body changes.
+  * [Catalog Link](https://www.earthdata.nasa.gov/data/catalog/pocloud-opera-l3-dswx-hls-v1-1.0)
+
+### 3. Thermal & Active Fire Hotspot Datasets
+* **MODIS Terra/Aqua & VIIRS (VNP14A1):** Analyzes Land Surface Temperature (LST in °C), thermal anomalies, and urban heat island effects.
+
+### 4. NASA CMR (Common Metadata Repository) Live Granule API
+* **Real-Time CMR Search Endpoint:** `https://cmr.earthdata.nasa.gov/search/granules.json`
+* Automatically queries real-time granules, acquisition timestamps, browse images, and metadata for any selected latitude/longitude coordinate across `LPCLOUD` and `POCLOUD` providers.
+
+### 5. NASA APOD API (Astronomy Picture of the Day)
+* Live feed integrated via `api.nasa.gov/planetary/apod` using official authorization key.
+
+### 6. Calibrated Benchmark Historical Dataset (`nasa_hls_bangladesh.json`)
+* Multi-year (2018–2024) time-series benchmarks for key industrial corridors (Dhaka Central, Chattogram Port, Gazipur Solar Zone, Khulna Coastal Belt, Sylhet Energy Hub, etc.) calculating multi-spectral indices (NDVI, NDWI, NDBI, LST).
 
 ---
 
@@ -114,9 +133,10 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 
 ### 3. 🛰️ Satellite Pipelines & NASA Datasets:
 - **NASA Harmonized Landsat and Sentinel-2 (HLS):** 30m resolution Surface Reflectance (`HLSL30` / `HLSS30`).
+- **OPERA Water Extent:** Level-3 DSWx-HLS dynamic inundation data.
+- **NASA CMR Live Search API:** Real-time granule metadata queries.
 - **NASA APOD API:** Live daily astronomy feed.
 - **MODIS & VIIRS:** Surface thermal anomalies and Land Surface Temperature (LST).
-- **Google Earth Engine (GEE) / STAC API:** Multi-spectral spatial data queries.
 
 ### 4. 🤖 AI, NLP & Export Services:
 - **Natural Language Generation (NLG):** Automated AI investment risk summaries & engineering mitigations.
