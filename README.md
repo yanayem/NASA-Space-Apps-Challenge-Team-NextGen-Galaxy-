@@ -6,12 +6,22 @@ A location intelligence platform powered by Earth-observation data to help decis
 
 ---
 
-## Live Deployment Links
+## Project Summary
+
+SpaceRisk is an Earth-observation-powered infrastructure location intelligence platform that helps organizations evaluate environmental trends before investing in construction projects. Users select or draw potential sites for warehouses, factories, solar farms, telecom towers, logistics hubs, or data centers. SpaceRisk analyzes how each location has changed over time by examining vegetation condition, surface-water signals, built-up expansion, and land-surface environmental trends. Using NASA Harmonized Landsat and Sentinel-2 (HLS) data, SpaceRisk transforms satellite observations into understandable site-comparison insights. Instead of only showing what a location looks like today, the platform helps users explore what has changed, identify environmental trade-offs, and compare candidate sites before making expensive infrastructure decisions. Our initial focus is Bangladesh, where rapid urban development, changing land use, heat, and water-related environmental conditions can strongly affect long-term infrastructure planning. SpaceRisk supports early-stage screening and decision-making; it is not a certified engineering, hydrological, insurance, or regulatory assessment.
+
+> **SpaceRisk — Before You Build. Know the Risk.**
+
+---
+
+## Live Deployment Links & Project Videos
 
 * **Web Application (Vercel):** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
 * **Backend REST API (Render):** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
 * **Interactive Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
 * **Interactive ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
+* **Global 30-Second Glory Pitch Video (YouTube):** [https://youtu.be/pa5HMNfOSBo](https://youtu.be/pa5HMNfOSBo)
+* **Local 240-Second Full Presentation Video (YouTube):** [https://youtu.be/OFomESUoPdg](https://youtu.be/OFomESUoPdg)
 
 ---
 
@@ -45,14 +55,108 @@ Today ───► Past ───► Present ───► Trends ───► De
 
 ## The Problem & The Big Idea
 
-### The Problem
-When companies or governments plan major infrastructure (warehouses, factories, solar farms), they traditionally focus on current conditions: affordable land, road access, and current mapping imagery. However, a single snapshot cannot reveal critical environmental trajectories—such as rising surface water, land-surface temperature surges, or rapid loss of vegetation.
+### Formal Problem Statement
+Infrastructure developers, industrial corporations, renewable energy investors, and government bodies routinely commit multi-million-dollar capital investments to long-term physical assets—such as industrial factories, solar farms, logistics hubs, data centers, and telecom towers. Traditionally, site-screening decisions rely primarily on static, point-in-time parameters: current land acquisition costs, immediate transport connectivity, and present-day optical mapping snapshots.
+
+However, a static snapshot cannot reveal long-term environmental trajectories. Physical sites undergo continuous ecological transformation. Rising surface water presence, seasonal inundation risk, land-surface temperature (LST) spikes, rapid deforestation, and ground imperviousness expansion can significantly impair asset safety, increase operational expenditures, and compromise structural longevity post-construction.
+
+---
+
+### Real-Life Problem Example: The Logistics Warehouse Scenario
+
+#### 1. The Decision Context
+A regional logistics enterprise seeks to build a $12 Million central distribution warehouse near an expanding industrial corridor outside Gazipur, Bangladesh.
+
+#### 2. What Static Evaluation Shows (Today's Snapshot)
+* Land purchase cost is highly competitive.
+* Excellent proximity to national highways.
+* Current aerial mapping imagery shows a dry, clear, flat land parcel.
+* Decision makers approve site acquisition based on present-day conditions.
+
+#### 3. What Multi-Year NASA Satellite Data Reveals (The Hidden Environmental Trajectory)
+Analyzing multi-year NASA Harmonized Landsat and Sentinel-2 (HLS) surface reflectance datasets across a 6-year period (2018–2024) reveals critical hidden environmental risks:
+* **NDWI (Surface Water Index Trend):** Dynamic surface water signals show a steady 22% multi-year expansion during seasonal monsoons due to upstream river siltation and drainage obstruction.
+* **LST (Land Surface Temperature Surge):** Regional land surface temperatures increased by +3.4°C, driven by rapid vegetation loss (NDVI dropped by 35% across surrounding buffer zones).
+* **NDBI (Built-Up Index Expansion):** Neighboring land conversion reduced soil infiltration capacity, severely heightening runoff accumulation toward the target parcel.
+
+#### 4. The Operational & Financial Impact Post-Construction
+Two years after facility completion:
+* Unpredicted seasonal water logging damages stored high-value inventory.
+* Heavy surface runoff causes soil saturation, leading to foundation settlement and cracking.
+* Extreme land-surface heat surges double HVAC energy consumption for climate-controlled storage.
+* **Result:** Unplanned capital expenditure on flood defense barriers, foundation underpinning, and energy overheads—eroding profitability.
+
+#### 5. How SpaceRisk Prevents the Loss
+Using SpaceRisk prior to land acquisition, decision-makers evaluate the site's 6-year satellite indicator trends, receive a clear **SpaceRisk Score of 74/100 (High Flood & Heat Exposure)**, compare it against candidate Site B (which exhibits lower environmental volatility), and either select the safer site or incorporate targeted civil engineering mitigations *before* capital is committed.
+
+---
 
 ### The Big Idea
-Instead of asking only *"What does this location look like?"*, SpaceRisk asks:
+Instead of asking only *"What does this location look like today?"*, SpaceRisk asks:
 1. *"What has changed here over the past several years?"*
 2. *"What is changing right now?"*
-3. *"What could those changes mean before we build?"*
+3. *"What could those environmental trends mean before we build?"*
+
+---
+
+## The Solution: Earth-Observation Infrastructure Intelligence
+
+SpaceRisk converts complex, multi-terabyte satellite catalogs into clear, quantitative location risk scores and decision matrices. Instead of requiring users to manually download and analyze raw satellite rasters, SpaceRisk automates the temporal data pipeline and delivers actionable insights in seconds.
+
+### Core Solution Pillars
+
+#### 1. Multi-Spectral Satellite Data Aggregation
+Aggregates NASA Harmonized Landsat and Sentinel-2 (HLS) surface reflectance, OPERA Level-3 dynamic water extent, and MODIS/VIIRS land surface thermal datasets across multi-year observation windows (2018–2024).
+
+#### 2. Project-Specific Multi-Criteria Decision Analysis (MCDA)
+Calculates overall site vulnerability using dynamic weight matrices tailored to specific asset types:
+* **Warehouses & Logistics Hubs:** Heavy weighting on seasonal inundation (NDWI) and ground stability.
+* **Solar Energy Farms:** Heavy weighting on land surface temperature (LST), thermal variance, and cloud cover history.
+* **Factories & Manufacturing:** High weighting on impervious surface expansion (NDBI) and runoff potential.
+* **Telecom Towers & Data Centers:** Focus on thermal stress and ground environmental stability.
+
+#### 3. Side-by-Side Multi-Site Candidate Comparison
+Evaluates between 2 and 5 proposed candidate sites simultaneously, producing a financial-grade comparison matrix that automatically highlights the lowest environmental volatility location.
+
+#### 4. Automated Engineering Mitigation Generation
+Translates satellite indicator trends into natural-language civil engineering recommendations—such as required structural foundation elevation, cool-roof thermal barrier coatings, and retention basin requirements.
+
+#### 5. Executive PDF Report Generation
+Generates exportable, audit-ready PDF risk summaries containing comprehensive satellite index plots, risk sub-scores, and project recommendations for investment committees and insurance underwriters.
+
+---
+
+## From Idea to Execution: Step-by-Step MVP Launch Strategy
+
+Transforming the SpaceRisk concept from an initial Earth-observation vision into a fully functional, cloud-deployed Minimum Viable Product (MVP) involves a 6-step execution lifecycle:
+
+### Step 1: Problem Validation & NASA Dataset Mapping
+* Define core high-value target assets (Warehouses, Solar Farms, Industrial Factories).
+* Map target risk indicators to official NASA Earthdata catalogs: HLS (`HLSL30`/`HLSS30`), OPERA DSWx, and MODIS/VIIRS LST.
+
+### Step 2: Algorithm Design & Benchmark Calibration
+* Develop the Multi-Criteria Decision Analysis (MCDA) weighted scoring formula:
+  $$\text{Risk Score} = 0.25 \times \text{Flood} + 0.20 \times \text{Heat} + 0.15 \times \text{Env Change} + 0.15 \times \text{Water} + 0.10 \times \text{Thermal} + 0.15 \times \text{Stability}$$
+* Calibrate benchmark temporal indicator datasets (`nasa_hls_bangladesh.json`) across key industrial hubs (Dhaka, Chattogram, Gazipur, Khulna, Sylhet).
+
+### Step 3: Backend REST Engine & NASA API Pipeline
+* Build high-performance RESTful API service using Python 3.11 and Django REST Framework (DRF).
+* Implement real-time granule querying via NASA Common Metadata Repository (CMR) API.
+* Implement dual-mode architecture with automated seed data failover to ensure 100% platform availability.
+
+### Step 4: B2B Cross-Platform User Interface (Flutter)
+* Develop responsive UI supporting Web, Android, iOS, and Desktop using Flutter (Dart 3.x).
+* Implement interactive multi-line time-series trend plotting using FL Chart.
+* Build the 0-100 radial SpaceRisk gauge, multi-site comparison matrix, and B2B theme engine (Light/Dark mode).
+
+### Step 5: Automated Testing & Cloud Infrastructure Deployment
+* Execute automated Django unit tests (MCDA validation, serializers, endpoints) and Flutter widget smoke tests.
+* Deploy Django REST API backend to Render Cloud Platform using Gunicorn and WhiteNoise static asset delivery.
+* Deploy Flutter Web client to Vercel Cloud Platform with global CDN distribution.
+
+### Step 6: MVP Market Deployment & Monetization Rollout
+* Launch targeted initial footprint focusing on rapidly developing economic corridors in Bangladesh (e.g., BEZA economic zones).
+* Roll out B2B commercial pricing streams: Pay-Per-Report ($99/report), Professional SaaS ($499/mo), and Enterprise SaaS ($2,000–$10,000+/mo).
 
 ---
 
@@ -96,6 +200,8 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 ## Video Scripts & Pitch Narratives
 
 ### 1. Global 30-Second Elevator Pitch Video Script
+* **Watch 30-Second Glory Video:** [https://youtu.be/pa5HMNfOSBo](https://youtu.be/pa5HMNfOSBo)
+
 > **Narrator:** Arefa Rhaman
 >
 > "Hi! We are NextGen Galaxy, and I'm Arefa.  
@@ -108,6 +214,7 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 ---
 
 ### 2. Comprehensive 240-Second Full Project Presentation Script (Single Narrator)
+* **Watch 240-Second Full Presentation Video:** [https://youtu.be/OFomESUoPdg](https://youtu.be/OFomESUoPdg)
 
 ### **0:00–0:20 — Hook / Attention**
 > Before we build a warehouse, a factory, a solar farm, or any major infrastructure, we usually ask one simple question: *Is this a good location?* But what if we are looking at that location only as it is today? What if the real story is hidden in how that place has changed over the past several years? Today tells us what a place looks like. Trends can tell us what a place is becoming.
@@ -187,6 +294,131 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 | **Real-Time CMR API** | **NASA CMR Search Endpoint** | Live granule metadata and acquisition timestamp querying |
 | **Astronomy Feed** | **NASA APOD API** | Daily NASA astronomy feed and scientific explanations |
 | **Testing & QA** | **Django Test & Flutter Test** | Automated API unit testing, MCDA validation, and widget smoke testing |
+
+---
+
+## Software Architecture, Data Pipelines & Engineering Specifications
+
+### 1. System Data Flow Architecture
+
+```
++-----------------------------------------------------------------------+
+|                       Flutter Frontend Client                         |
+|      (Cross-Platform: Web / Android / iOS / Windows Desktop)          |
++-----------------------------------++----------------------------------+
+                                    || HTTP REST (JSON)
+                                    \/
++-----------------------------------------------------------------------+
+|                      Django REST API Backend Core                     |
+|  - Request Validation & DRF Serializers                              |
+|  - Multi-Criteria Decision Analysis (MCDA) Scoring Engine             |
+|  - Natural Language Generation (NLG) Mitigation Generator             |
++-------------------++----------------------------------++--------------+
+                    ||                                  ||
+      Live Query    ||                                  || Seed Failover
+                    \/                                  \/
++---------------------------------------+  +----------------------------+
+| NASA CMR Granule & HLS Catalog Engine |  | Benchmark JSON Seed Store  |
+| - HLSL30 (Landsat Surface Reflectance)|  | (nasa_hls_bangladesh.json) |
+| - HLSS30 (Sentinel-2 Reflectance)     |  | Calibrated 2018-2024      |
+| - OPERA DSWx Dynamic Water Extent     |  | Historical Satellite       |
+| - MODIS/VIIRS Thermal & Fire LST      |  | Temporal Indicators        |
++---------------------------------------+  +----------------------------+
+```
+
+---
+
+### 2. Software Design Patterns & Technical Capabilities
+
+#### A. Dual-Mode Resilience & Graceful Seed Failover Pattern
+The Flutter frontend client implements an adaptive data provider (`ApiService`). Upon execution, the client attempts a live REST handshake with the Django API backend on Render Cloud. If the cloud server experiences cold startup latency or network loss, the client gracefully falls back to local high-fidelity satellite indicator benchmarks (`nasa_hls_bangladesh.json`), guaranteeing zero platform downtime during investor presentations.
+
+#### B. Provider Pattern for Reactive State & System Theme Synchronization
+Client-side state management is built on the `Provider` pattern. `ThemeProvider` listens to browser and system OS brightness events, providing instant reactive UI updates and persistent theme mode settings across app sessions using `SharedPreferences`.
+
+#### C. OpenAPI 3.0 & drf-spectacular Schema Generation
+The Django REST backend utilizes `drf-spectacular` to inspect viewsets and serializers, automatically compiling an interactive OpenAPI 3.0 schema accessible via Swagger UI (`/swagger/`) and ReDoc (`/redoc/`).
+
+---
+
+### 3. API Payload Specifications & Request Schemas
+
+#### POST /api/risk-analysis/ (Single-Site MCDA Evaluation)
+* **Request Payload:**
+```json
+{
+  "site_name": "Gazipur Logistics Corridor",
+  "latitude": 23.9999,
+  "longitude": 90.4203,
+  "project_type": "warehouse"
+}
+```
+
+* **Response Payload (HTTP 200 OK):**
+```json
+{
+  "site_name": "Gazipur Logistics Corridor",
+  "project_type": "warehouse",
+  "overall_risk_score": 74.2,
+  "risk_category": "High Risk",
+  "sub_scores": {
+    "flood_risk": 82.0,
+    "heat_risk": 71.5,
+    "environmental_change": 68.0,
+    "water_change": 76.4,
+    "thermal_event": 62.0,
+    "site_stability": 75.0
+  },
+  "actionable_mitigations": [
+    "Elevate primary warehouse foundation by minimum 1.5 meters to offset monsoon NDWI water expansion.",
+    "Install high-albedo cool roof thermal membrane coatings to counter LST surface heat buildup."
+  ]
+}
+```
+
+#### POST /api/site-comparison/ (Multi-Site Candidate Ranking)
+* **Request Payload:**
+```json
+{
+  "project_type": "solar_farm",
+  "sites": [
+    {"site_name": "Site A - Coastal", "latitude": 22.3569, "longitude": 91.7832},
+    {"site_name": "Site B - Gazipur Solar Zone", "latitude": 24.0958, "longitude": 90.3241}
+  ]
+}
+```
+
+* **Response Payload (HTTP 200 OK):**
+```json
+{
+  "project_type": "solar_farm",
+  "recommended_site": "Site B - Gazipur Solar Zone",
+  "rankings": [
+    {"rank": 1, "site_name": "Site B - Gazipur Solar Zone", "overall_score": 41.8, "risk_category": "Moderate-Low Risk"},
+    {"rank": 2, "site_name": "Site A - Coastal", "overall_score": 76.5, "risk_category": "High Risk"}
+  ]
+}
+```
+
+---
+
+## Enterprise Software Firm & System Governance Specifications
+
+### 1. Security, Compliance & Data Governance
+* **API Request Validation:** All client REST payloads undergo strict schema verification and sanitization using Django REST Framework serializers before entering the MCDA computation engine.
+* **CORS & Domain Whitelisting:** Cross-Origin Resource Sharing (CORS) is explicitly restricted to verified production domains (`https://spacerisk.vercel.app/`) and trusted local development environments.
+* **Data Privacy:** SpaceRisk processes non-proprietary geospatial coordinates and publicly available satellite surface reflectance products; no sensitive enterprise site ownership data is stored or transmitted.
+
+### 2. Infrastructure Reliability, Monitoring & Health Protocols
+* **System Health Check Endpoint (`GET /api/health/`):** Exposes live service status monitoring, database status, and upstream NASA API connectivity verification for uptime monitoring tools.
+* **Production Concurrency & Load Management:** Django backend runs on Gunicorn WSGI with multi-worker process management, configured with WhiteNoise for efficient static asset delivery.
+* **Satellite Buffer & Cache Maintenance:** Supports explicit client-side cache clearing via the Settings engine to maintain temporary storage efficiency.
+
+### 3. Software Vendor Service Level Agreement (SLA) & Reliability Guarantees
+* **Target Availability:** 99.9% Uptime SLA supported by the dual-mode seed failover engine.
+* **Zero-Downtime Presentation Assurance:** In the event of cloud server cold-starts or external NASA API maintenance, SpaceRisk continues operation seamlessly via local calibrated benchmarks.
+
+---
 
 ---
 
