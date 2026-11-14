@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import '../services/seed_data.dart';
 import '../models/risk_models.dart';
+import '../models/preset_sites.dart';
 import '../widgets/risk_gauge.dart';
 import '../theme/app_theme.dart';
 
@@ -15,9 +15,10 @@ class SiteRiskScreen extends StatefulWidget {
 class _SiteRiskScreenState extends State<SiteRiskScreen> {
   final ApiService _apiService = ApiService();
 
-  CandidateSite _selectedSite = SeedData.sampleSites[0];
+  CandidateSite _selectedSite = PresetSites.sampleSites[0];
   String _projectType = 'warehouse';
   bool _isLoading = false;
+  String? _errorMessage;
   RiskAnalysisResult? _analysisResult;
 
   final Map<String, String> _projectTypes = {
@@ -37,7 +38,11 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
   }
 
   Future<void> _evaluateRisk() async {
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
     try {
       final res = await _apiService.evaluateSiteRisk(
         siteName: _selectedSite.name,
@@ -53,20 +58,26 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() {
+          _errorMessage = 'Failed to evaluate risk from API server ($e)';
+          _isLoading = false;
+        });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isWide = width >= 750;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Input Form Card
-          _buildSelectionCard(),
+          _buildSelectionCard(isWide),
           const SizedBox(height: 20),
 
           if (_isLoading)
@@ -85,28 +96,150 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
                 ),
               ),
             )
+          else if (_errorMessage != null)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: context.cardDecoration,
+                child: Column(
+                  children: [
+                    const Icon(Icons.cloud_off, size: 44, color: AppTheme.accentAmber),
+                    const SizedBox(height: 12),
+                    Text(
+                      _errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: context.textSecondary, fontSize: 13),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryBlue,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _evaluateRisk,
+                      icon: const Icon(Icons.refresh, size: 18),
+                      label: const Text('Retry Risk Analysis'),
+                    ),
+                  ],
+                ),
+              ),
+            )
           else if (_analysisResult != null) ...[
-            // Main Gauge & Overall Score Section
-            _buildGaugeCard(_analysisResult!),
-            const SizedBox(height: 16),
+            if (isWide) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 5, child: _buildGaugeCard(_analysisResult!)),
+                  const SizedBox(width: 16),
+                  Expanded(flex: 6, child: _buildAiSummaryCard(_analysisResult!)),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 6, child: _buildSubRiskBreakdownCard(_analysisResult!)),
+                  const SizedBox(width: 16),
+                  Expanded(flex: 5, child: _buildMitigationsCard(_analysisResult!)),
+                ],
+              ),
+            ] else ...[
+              // Main Gauge & Overall Score Section
+              _buildGaugeCard(_analysisResult!),
+              const SizedBox(height: 16),
 
-            // AI Investment Summary
-            _buildAiSummaryCard(_analysisResult!),
-            const SizedBox(height: 16),
+              // AI Investment Summary
+              _buildAiSummaryCard(_analysisResult!),
+              const SizedBox(height: 16),
 
-            // Sub-Risk Breakdown Metrics
-            _buildSubRiskBreakdownCard(_analysisResult!),
-            const SizedBox(height: 16),
+              // Sub-Risk Breakdown Metrics
+              _buildSubRiskBreakdownCard(_analysisResult!),
+              const SizedBox(height: 16),
 
-            // Actionable Engineering Mitigations
-            _buildMitigationsCard(_analysisResult!),
+              // Actionable Engineering Mitigations
+              _buildMitigationsCard(_analysisResult!),
+            ],
           ],
         ],
       ),
     );
   }
 
-  Widget _buildSelectionCard() {
+  Widget _buildSelectionCard(bool isWide) {
+    final siteSelector = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Select Target Site:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: context.subCardDecoration,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<CandidateSite>(
+              value: _selectedSite,
+              isExpanded: true,
+              dropdownColor: context.dropdownBg,
+              items: PresetSites.sampleSites.map((site) {
+                return DropdownMenuItem<CandidateSite>(
+                  value: site,
+                  child: Text(
+                    site.name,
+                    style: TextStyle(color: context.textPrimary, fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() {
+                    _selectedSite = val;
+                  });
+                  _evaluateRisk();
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final typeSelector = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Infrastructure Project Type:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: context.subCardDecoration,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _projectType,
+              isExpanded: true,
+              dropdownColor: context.dropdownBg,
+              items: _projectTypes.entries.map((e) {
+                return DropdownMenuItem<String>(
+                  value: e.key,
+                  child: Text(
+                    e.value,
+                    style: TextStyle(color: context.textPrimary, fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() {
+                    _projectType = val;
+                  });
+                  _evaluateRisk();
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: context.cardDecoration,
@@ -117,82 +250,33 @@ class _SiteRiskScreenState extends State<SiteRiskScreen> {
             children: [
               const Icon(Icons.tune, color: AppTheme.primaryBlue, size: 20),
               const SizedBox(width: 8),
-              Text(
-                'Target Candidate Site & Project Parameters',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: context.textPrimary,
-                  fontSize: 14,
+              Expanded(
+                child: Text(
+                  'Target Candidate Site & Project Parameters',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: context.textPrimary,
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-
-          // Candidate Site Selector
-          Text('Select Target Site:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
-          const SizedBox(height: 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: context.subCardDecoration,
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<CandidateSite>(
-                value: _selectedSite,
-                isExpanded: true,
-                dropdownColor: context.dropdownBg,
-                items: SeedData.sampleSites.map((site) {
-                  return DropdownMenuItem<CandidateSite>(
-                    value: site,
-                    child: Text(
-                      site.name,
-                      style: TextStyle(color: context.textPrimary, fontSize: 13),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {
-                      _selectedSite = val;
-                    });
-                    _evaluateRisk();
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Infrastructure Project Type
-          Text('Infrastructure Project Type:', style: TextStyle(color: context.textSecondary, fontSize: 12)),
-          const SizedBox(height: 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: context.subCardDecoration,
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _projectType,
-                isExpanded: true,
-                dropdownColor: context.dropdownBg,
-                items: _projectTypes.entries.map((e) {
-                  return DropdownMenuItem<String>(
-                    value: e.key,
-                    child: Text(
-                      e.value,
-                      style: TextStyle(color: context.textPrimary, fontSize: 13),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {
-                      _projectType = val;
-                    });
-                    _evaluateRisk();
-                  }
-                },
-              ),
-            ),
-          ),
+          if (isWide)
+            Row(
+              children: [
+                Expanded(child: siteSelector),
+                const SizedBox(width: 16),
+                Expanded(child: typeSelector),
+              ],
+            )
+          else ...[
+            siteSelector,
+            const SizedBox(height: 12),
+            typeSelector,
+          ],
         ],
       ),
     );
