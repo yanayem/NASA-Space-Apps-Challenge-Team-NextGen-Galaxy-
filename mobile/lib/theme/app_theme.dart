@@ -64,6 +64,14 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: darkCard,
+        indicatorColor: primaryBlue.withValues(alpha: 0.20),
+        selectedIconTheme: const IconThemeData(color: primaryBlue, size: 22),
+        unselectedIconTheme: const IconThemeData(color: darkTextSecondary, size: 22),
+        selectedLabelTextStyle: const TextStyle(color: primaryBlue, fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelTextStyle: const TextStyle(color: darkTextSecondary, fontSize: 11),
+      ),
       dividerColor: darkBorder,
       dialogTheme: DialogThemeData(
         backgroundColor: darkCard,
@@ -123,6 +131,14 @@ class AppTheme {
         unselectedItemColor: Color(0xFF64748B),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: lightCard,
+        indicatorColor: primaryBlue.withValues(alpha: 0.15),
+        selectedIconTheme: const IconThemeData(color: primaryBlueDark, size: 22),
+        unselectedIconTheme: const IconThemeData(color: lightTextSecondary, size: 22),
+        selectedLabelTextStyle: const TextStyle(color: primaryBlueDark, fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelTextStyle: const TextStyle(color: lightTextSecondary, fontSize: 11),
       ),
       dividerColor: lightBorder,
       dialogTheme: DialogThemeData(
