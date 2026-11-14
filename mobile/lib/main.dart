@@ -60,9 +60,10 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final apiService = Provider.of<ApiService>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final width = MediaQuery.of(context).size.width;
+    final isWideScreen = width >= 800;
 
     final List<Widget> screens = [
       DashboardScreen(onNavigateTab: _navigateToTab),
@@ -84,6 +85,17 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
       'NASA Earth & Space Feed',
     ];
 
+    final mainBody = Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1280),
+        child: IndexedStack(
+          index: _currentIndex < screens.length ? _currentIndex : 0,
+          children: screens,
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -100,33 +112,7 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
           ],
         ),
         actions: [
-          // Seed Data Badge
-          if (apiService.useSeedDataMode || apiService.lastRequestWasDemo)
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryBlue.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.primaryBlue, width: 1),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.sd_card, color: AppTheme.primaryBlue, size: 12),
-                  SizedBox(width: 4),
-                  Text(
-                    'SEED DATA',
-                    style: TextStyle(
-                      color: AppTheme.primaryBlue,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-          // Quick Theme Toggle Button (Light/Dark switch right in AppBar)
+          // Quick Theme Toggle Button
           IconButton(
             icon: Icon(
               isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
@@ -153,53 +139,115 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _currentIndex < screens.length ? _currentIndex : 0,
-        children: screens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex > 5 ? 0 : _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: 11,
-        unselectedFontSize: 11,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined),
-            activeIcon: Icon(Icons.analytics),
-            label: 'Risk 0-100',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.compare_arrows_rounded),
-            activeIcon: Icon(Icons.compare_arrows),
-            label: 'Compare',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.show_chart_rounded),
-            activeIcon: Icon(Icons.show_chart),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.picture_as_pdf_outlined),
-            activeIcon: Icon(Icons.picture_as_pdf),
-            label: 'Reports',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tune_outlined),
-            activeIcon: Icon(Icons.tune),
-            label: 'Settings',
-          ),
-        ],
-      ),
+      body: isWideScreen
+          ? Row(
+              children: [
+                NavigationRail(
+                  selectedIndex: _currentIndex < 7 ? _currentIndex : 0,
+                  indicatorColor: AppTheme.primaryBlue.withValues(alpha: 0.15),
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                  labelType: width > 1100
+                      ? NavigationRailLabelType.all
+                      : NavigationRailLabelType.selected,
+                  leading: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: CircleAvatar(
+                      backgroundColor: AppTheme.primaryBlue.withValues(alpha: 0.15),
+                      child: const Icon(Icons.satellite_alt, color: AppTheme.primaryBlue, size: 20),
+                    ),
+                  ),
+                  destinations: const [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.dashboard_outlined),
+                      selectedIcon: Icon(Icons.dashboard, color: AppTheme.primaryBlue),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.analytics_outlined),
+                      selectedIcon: Icon(Icons.analytics, color: AppTheme.primaryBlue),
+                      label: Text('Risk Score'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.compare_arrows_rounded),
+                      selectedIcon: Icon(Icons.compare_arrows, color: AppTheme.primaryBlue),
+                      label: Text('Compare'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.show_chart_rounded),
+                      selectedIcon: Icon(Icons.show_chart, color: AppTheme.primaryBlue),
+                      label: Text('Trends'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.picture_as_pdf_outlined),
+                      selectedIcon: Icon(Icons.picture_as_pdf, color: AppTheme.primaryBlue),
+                      label: Text('Reports'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.tune_outlined),
+                      selectedIcon: Icon(Icons.tune, color: AppTheme.primaryBlue),
+                      label: Text('Settings'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.auto_awesome_outlined),
+                      selectedIcon: Icon(Icons.auto_awesome, color: AppTheme.primaryBlue),
+                      label: Text('NASA Feed'),
+                    ),
+                  ],
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(child: mainBody),
+              ],
+            )
+          : mainBody,
+      bottomNavigationBar: isWideScreen
+          ? null
+          : BottomNavigationBar(
+              currentIndex: _currentIndex > 5 ? 0 : _currentIndex,
+              type: BottomNavigationBarType.fixed,
+              selectedFontSize: 11,
+              unselectedFontSize: 11,
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.dashboard_outlined),
+                  activeIcon: Icon(Icons.dashboard),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.analytics_outlined),
+                  activeIcon: Icon(Icons.analytics),
+                  label: 'Risk 0-100',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.compare_arrows_rounded),
+                  activeIcon: Icon(Icons.compare_arrows),
+                  label: 'Compare',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.show_chart_rounded),
+                  activeIcon: Icon(Icons.show_chart),
+                  label: 'Trends',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.picture_as_pdf_outlined),
+                  activeIcon: Icon(Icons.picture_as_pdf),
+                  label: 'Reports',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.tune_outlined),
+                  activeIcon: Icon(Icons.tune),
+                  label: 'Settings',
+                ),
+              ],
+            ),
     );
   }
 }
