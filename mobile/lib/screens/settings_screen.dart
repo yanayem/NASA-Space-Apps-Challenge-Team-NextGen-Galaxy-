@@ -14,31 +14,22 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late TextEditingController _urlController;
-  late TextEditingController _nasaApiKeyController;
-
   bool _isTestingConnection = false;
   String? _connectionTestResult;
   bool? _isConnectionSuccess;
   int? _latencyMs;
 
-  String _tempUnit = 'Celsius (°C)';
-  String _windUnit = 'km/h';
-  String _climateHorizon = '2040 Decadal Projection';
+  late String _tempUnit;
+  late String _windUnit;
+  late String _climateHorizon;
 
   @override
   void initState() {
     super.initState();
     final apiService = Provider.of<ApiService>(context, listen: false);
-    _urlController = TextEditingController(text: apiService.backendUrl);
-    _nasaApiKeyController = TextEditingController(text: 'DEMO_KEY');
-  }
-
-  @override
-  void dispose() {
-    _urlController.dispose();
-    _nasaApiKeyController.dispose();
-    super.dispose();
+    _tempUnit = apiService.tempUnit;
+    _windUnit = apiService.windUnit;
+    _climateHorizon = apiService.climateHorizon;
   }
 
   Future<void> _pingBackend(String url) async {
@@ -123,15 +114,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              apiService.setBackendUrl('https://spacerisk.onrender.com/api');
-              apiService.setSeedDataMode(false);
+              apiService.resetToDefaults();
               themeProvider.setThemeMode(ThemeMode.system);
               setState(() {
-                _urlController.text = 'https://spacerisk.onrender.com/api';
-                _nasaApiKeyController.text = 'DEMO_KEY';
-                _tempUnit = 'Celsius (°C)';
-                _windUnit = 'km/h';
-                _climateHorizon = '2040 Decadal Projection';
+                _tempUnit = apiService.tempUnit;
+                _windUnit = apiService.windUnit;
+                _climateHorizon = apiService.climateHorizon;
                 _connectionTestResult = null;
               });
               Navigator.pop(ctx);
@@ -151,56 +139,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final apiService = Provider.of<ApiService>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            Icon(Icons.tune_rounded, color: AppTheme.primaryBlue, size: 22),
-            SizedBox(width: 8),
-            Text('Settings & Configuration'),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hero Intro Card
-            _buildHeroSettingsCard(),
-            const SizedBox(height: 20),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Hero Intro Card
+          _buildHeroSettingsCard(),
+          const SizedBox(height: 20),
 
-            // Appearance & Themes Section
-            _buildSectionHeader('Appearance & Display Mode', Icons.palette_outlined),
-            const SizedBox(height: 10),
-            _buildThemeSelectorCard(themeProvider),
-            const SizedBox(height: 24),
+          // Appearance & Themes Section
+          _buildSectionHeader('Appearance & Display Mode', Icons.palette_outlined),
+          const SizedBox(height: 10),
+          _buildThemeSelectorCard(themeProvider),
+          const SizedBox(height: 24),
 
-            // Backend & API Connectivity
-            _buildSectionHeader('Backend & Intelligence Engine', Icons.dns_outlined),
-            const SizedBox(height: 10),
-            _buildBackendCard(apiService),
-            const SizedBox(height: 24),
+          // Backend & API Connectivity
+          _buildSectionHeader('Backend & Intelligence Engine', Icons.dns_outlined),
+          const SizedBox(height: 10),
+          _buildBackendCard(apiService),
+          const SizedBox(height: 24),
 
-            // Earth Observation & Climate Engine
-            _buildSectionHeader('NASA Earth Observation Preferences', Icons.satellite_alt_outlined),
-            const SizedBox(height: 10),
-            _buildNasaPreferencesCard(),
-            const SizedBox(height: 24),
+          // Earth Observation & Climate Engine
+          _buildSectionHeader('Climate & Measurement Preferences', Icons.satellite_alt_outlined),
+          const SizedBox(height: 10),
+          _buildNasaPreferencesCard(apiService),
+          const SizedBox(height: 24),
 
-            // Storage & Maintenance
-            _buildSectionHeader('Storage & Cache Maintenance', Icons.storage_outlined),
-            const SizedBox(height: 10),
-            _buildStorageMaintenanceCard(apiService, themeProvider),
-            const SizedBox(height: 24),
+          // Storage & Maintenance
+          _buildSectionHeader('Storage & Cache Maintenance', Icons.storage_outlined),
+          const SizedBox(height: 10),
+          _buildStorageMaintenanceCard(apiService, themeProvider),
+          const SizedBox(height: 24),
 
-            // About & System Info
-            _buildSectionHeader('About SpaceRisk Platform', Icons.info_outline),
-            const SizedBox(height: 10),
-            _buildAboutCard(),
-            const SizedBox(height: 20),
-          ],
-        ),
+          // About & System Info
+          _buildSectionHeader('About SpaceRisk Platform', Icons.info_outline),
+          const SizedBox(height: 10),
+          _buildAboutCard(),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
@@ -247,7 +224,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: AppTheme.primaryBlue.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.settings_suggest, color: AppTheme.primaryBlue, size: 30),
+            child: const Icon(Icons.tune_rounded, color: AppTheme.primaryBlue, size: 30),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -255,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'System Preferences',
+                  'Settings & Configuration',
                   style: TextStyle(
                     color: context.textPrimary,
                     fontSize: 16,
@@ -264,7 +241,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Switch themes, calibrate NASA satellite feeds, and manage your Django REST backend connectivity.',
+                  'Switch themes, calibrate climate preferences, and monitor your Django REST backend status.',
                   style: TextStyle(color: context.textSecondary, fontSize: 12),
                 ),
               ],
@@ -297,7 +274,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 16),
 
-          // 3 Theme Options: System, Light, Dark
           Row(
             children: [
               Expanded(
@@ -336,37 +312,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(height: 1),
           const SizedBox(height: 12),
 
-          // Quick Theme Toggle Switch
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    context.isDarkMode ? Icons.nightlight_round : Icons.wb_sunny_rounded,
-                    color: context.isDarkMode ? AppTheme.accentPurple : AppTheme.accentAmber,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Active Display Mode',
-                        style: TextStyle(
-                          color: context.textPrimary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      context.isDarkMode ? Icons.nightlight_round : Icons.wb_sunny_rounded,
+                      color: context.isDarkMode ? AppTheme.accentPurple : AppTheme.accentAmber,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Active Display Mode',
+                            style: TextStyle(
+                              color: context.textPrimary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            context.isDarkMode ? 'Aerospace Dark Theme' : 'Scientific Light Theme',
+                            style: TextStyle(color: context.textSecondary, fontSize: 11),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      Text(
-                        context.isDarkMode ? 'Aerospace Dark Theme' : 'Scientific Light Theme',
-                        style: TextStyle(color: context.textSecondary, fontSize: 11),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Switch(
                 value: context.isDarkMode,
                 onChanged: (_) => themeProvider.toggleTheme(context),
@@ -419,6 +401,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 fontSize: 12,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
             if (isSelected)
@@ -446,6 +430,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildBackendCard(ApiService apiService) {
+    final isLocal = apiService.backendUrl.contains('10.0.2.2') || apiService.backendUrl.contains('127.0.0.1');
+    final serverModeText = isLocal ? 'LOCAL PC MODE' : 'RENDER CLOUD LIVE';
+    final serverModeColor = isLocal ? AppTheme.accentCyan : AppTheme.accentEmerald;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: context.cardDecoration,
@@ -463,120 +451,97 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 14,
                 ),
               ),
-              if (apiService.useSeedDataMode)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppTheme.accentAmber.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppTheme.accentAmber.withValues(alpha: 0.4)),
-                  ),
-                  child: const Text(
-                    'OFFLINE SEED',
-                    style: TextStyle(
-                      color: AppTheme.accentAmber,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: serverModeColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: serverModeColor.withValues(alpha: 0.4)),
                 ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.circle, color: serverModeColor, size: 8),
+                    const SizedBox(width: 6),
+                    Text(
+                      serverModeText,
+                      style: TextStyle(
+                        color: serverModeColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 6),
           Text(
-            'Connects to the Python/Django microservice for NASA Earth data ingestion and risk aggregation.',
+            isLocal
+                ? 'Currently processing via your local Python/Django development server.'
+                : 'High-concurrency Python/Django REST engine hosted on Render Cloud Platform.',
             style: TextStyle(color: context.textSecondary, fontSize: 12),
           ),
           const SizedBox(height: 14),
 
-          // URL Input
-          TextField(
-            controller: _urlController,
-            style: TextStyle(color: context.textPrimary, fontSize: 13),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: context.inputBg,
-              hintText: 'https://spacerisk.onrender.com/api',
-              hintStyle: TextStyle(color: context.textMuted),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: context.cardBorder),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 1.5),
-              ),
+          // Display-only URL Container
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: context.inputBg,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: context.cardBorder),
             ),
-          ),
-          const SizedBox(height: 10),
-
-          // Preset Quick Buttons
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildPresetButton(
-                  'Cloud Render Live',
-                  'https://spacerisk.onrender.com/api',
+                Icon(
+                  isLocal ? Icons.computer : Icons.cloud_done_outlined,
+                  color: AppTheme.primaryBlue,
+                  size: 20,
                 ),
-                const SizedBox(width: 8),
-                _buildPresetButton(
-                  'Android Emulator (10.0.2.2)',
-                  'http://10.0.2.2:8000/api',
-                ),
-                const SizedBox(width: 8),
-                _buildPresetButton(
-                  'Localhost PC (127.0.0.1)',
-                  'http://127.0.0.1:8000/api',
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    apiService.backendUrl,
+                    style: TextStyle(
+                      color: context.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'monospace',
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 14),
 
-          // Ping / Test Connection Row
+          // Ping / Latency Check Button
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
+                child: OutlinedButton.icon(
                   onPressed: _isTestingConnection
                       ? null
-                      : () {
-                          apiService.setBackendUrl(_urlController.text);
-                          _pingBackend(_urlController.text);
-                        },
+                      : () => _pingBackend(apiService.backendUrl),
                   icon: _isTestingConnection
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryBlue),
                         )
                       : const Icon(Icons.network_ping, size: 18),
-                  label: Text(_isTestingConnection ? 'Testing...' : 'Test Connection & Ping'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryBlue,
-                    foregroundColor: Colors.white,
+                  label: Text(_isTestingConnection ? 'Testing Latency...' : 'Check Server Latency'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.primaryBlue,
+                    side: const BorderSide(color: AppTheme.primaryBlue),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 11),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              OutlinedButton(
-                onPressed: () {
-                  apiService.setBackendUrl(_urlController.text);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Backend URL saved.')),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: context.textPrimary,
-                  side: BorderSide(color: context.cardBorder),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
-                ),
-                child: const Text('Save'),
               ),
             ],
           ),
@@ -627,118 +592,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ],
-
-          const SizedBox(height: 16),
-          const Divider(height: 1),
-          const SizedBox(height: 12),
-
-          // Offline Seed Data Mode Toggle
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Force Offline Seed & Demo Mode',
-                      style: TextStyle(
-                        color: context.textPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Uses pre-calculated NASA multi-year time-series and candidate site models without network round-trips.',
-                      style: TextStyle(color: context.textSecondary, fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Switch(
-                value: apiService.useSeedDataMode,
-                onChanged: (val) {
-                  apiService.setSeedDataMode(val);
-                },
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildPresetButton(String label, String url) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _urlController.text = url;
-        });
-      },
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: context.subCardBg,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: context.cardBorder),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: AppTheme.primaryBlue,
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNasaPreferencesCard() {
+  Widget _buildNasaPreferencesCard(ApiService apiService) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'NASA Open API Authorization Key',
-            style: TextStyle(
-              color: context.textPrimary,
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'DEMO_KEY provides 30 requests/hour. Enter an official api.nasa.gov key for higher quota.',
-            style: TextStyle(color: context.textSecondary, fontSize: 12),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: _nasaApiKeyController,
-            style: TextStyle(color: context.textPrimary, fontSize: 13),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: context.inputBg,
-              hintText: 'Enter NASA API Key or keep DEMO_KEY',
-              hintStyle: TextStyle(color: context.textMuted),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: context.cardBorder),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 1.5),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
           // Measurement Units
           Row(
             children: [
@@ -821,6 +686,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onChanged: (val) {
                   if (val != null) setState(() => _climateHorizon = val);
                 },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                apiService.setPreferences(
+                  tempUnit: _tempUnit,
+                  windUnit: _windUnit,
+                  climateHorizon: _climateHorizon,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Preferences saved.')),
+                );
+              },
+              icon: const Icon(Icons.save_outlined, size: 18),
+              label: const Text('Save Preferences'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryBlue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(vertical: 11),
               ),
             ),
           ),
@@ -972,7 +861,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const Scaffold(body: ApodScreen())),
+                    MaterialPageRoute(
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(
+                          title: const Text('NASA Earth & Space Feed'),
+                        ),
+                        body: const ApodScreen(),
+                      ),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.arrow_forward, size: 14),
