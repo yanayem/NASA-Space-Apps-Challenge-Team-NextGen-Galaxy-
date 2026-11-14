@@ -93,7 +93,21 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 
 ---
 
-## 240-Second Video Script (Single Narrator)
+## Video Scripts & Pitch Narratives
+
+### 1. Global 30-Second Elevator Pitch Video Script
+> **Narrator:** Arefa Rhaman
+>
+> "Hi! We are NextGen Galaxy, and I'm Arefa.  
+> Before building the future, shouldn't we understand the land beneath it?  
+> Meet SpaceRisk — an environmental intelligence platform that turns satellite data into location insights.  
+> By analyzing changes in vegetation, water, built-up areas, and surface temperature, SpaceRisk helps identify environmental trends and compare potential infrastructure sites.  
+> Don't just choose where to build. Know what you're building into.  
+> **SpaceRisk — Before You Build. Know the Risk.**"
+
+---
+
+### 2. Comprehensive 240-Second Full Project Presentation Script (Single Narrator)
 
 ### **0:00–0:20 — Hook / Attention**
 > Before we build a warehouse, a factory, a solar farm, or any major infrastructure, we usually ask one simple question: *Is this a good location?* But what if we are looking at that location only as it is today? What if the real story is hidden in how that place has changed over the past several years? Today tells us what a place looks like. Trends can tell us what a place is becoming.
