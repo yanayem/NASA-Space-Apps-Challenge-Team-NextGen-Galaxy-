@@ -130,8 +130,8 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full-stack Earth-observation intelligence ecosystem combining NASA satellite pipelines, AI/NLG processing, and cloud distribution:
 
 ### 1. 📱 Frontend & Visualization (Mobile):
-- **Flutter (Dart):** Cross-platform high-performance UI framework.
-- **Interactive Map Engine:** Precise Lat/Lon coordinates selection & polygon boundaries.
+- **Flutter (Dart 3.x):** Cross-platform high-performance UI framework supporting Web, Android, iOS, and Desktop.
+- **Interactive Map Engine:** Precise Lat/Lon coordinate selection & polygon boundaries.
 - **FL Chart & Custom Gauges:** Interactive multi-year time-series trend plotting (NDVI, NDWI, NDBI, LST).
 
 ### 2. ⚙️ Core Engine & Cloud Backend:
@@ -152,6 +152,23 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 - **Project Weighting Algorithm:** Tailored risk matrix (Warehouse, Factory, Solar Farm, Data Center, Telecom).
 - **B2B PDF Report Engine:** Automated executive report generation.
 - **Firebase Admin & FCM:** Push notification alerts & cloud auth verification.
+
+---
+
+## 🏢 B2B Business Plan & Market Strategy
+
+### 1. Market Problem
+Infrastructure companies, industrial groups, and real estate developers make multi-million-dollar decisions using static mapping imagery and land price alone. Environmental exposure—such as seasonal inundation, thermal stress, or deforestation—causes massive operational losses post-construction.
+
+### 2. SpaceRisk Moat & Value Proposition
+* Converts complex satellite imagery into a single **SpaceRisk Score (0–100)**.
+* Tailors environmental risk weighting based on project type (e.g., Solar Farms care more about LST/cloud coverage, while Warehouses prioritize flood indices).
+* **Killer Feature — Multi-Site Comparison:** Evaluates 2 to 5 candidate parcels side-by-side to determine the optimal low-risk site.
+
+### 3. Business & Monetization Model
+* **Pay-Per-Report ($99 / report):** Single executive assessment PDF report for small projects.
+* **Professional SaaS ($499 / month):** 10 site analyses/month, comparison matrix, temporal trend export for SMB developers.
+* **Enterprise SaaS ($2,000 – $10,000+ / month):** Unlimited API access, custom risk scoring algorithms, white-label PDF reports, and priority GIS data streams for government and enterprise insurance underwriters.
 
 ---
 
@@ -186,18 +203,83 @@ Designed for field operations, low-light environments, and night-shift monitorin
 
 ---
 
-## 📂 Project Structure
+## 📖 End-to-End User Guide: How to Use SpaceRisk
+
+### 1. Single-Site Risk Evaluation Engine
+1. Navigate to **Risk 0-100** from the side rail or navigation bar.
+2. Select your planned infrastructure project type (*Warehouse*, *Factory*, *Solar Farm*, *Data Center*, or *Telecom Tower*).
+3. Enter custom coordinates or select a pre-calibrated location (e.g., *Gazipur Solar Zone*, *Chattogram Industrial Hub*, *Khulna Coastal Belt*).
+4. Tap **Run Risk Analysis** to receive the overall **SpaceRisk Score (0–100)**, sub-score radar breakdown, and engineering mitigations.
+
+### 2. Multi-Site Comparison Matrix (Killer Feature)
+1. Navigate to **Compare** from the menu.
+2. Add between 2 and 5 proposed candidate sites.
+3. Tap **Compare Candidate Sites**.
+4. Review the tabular matrix comparing relative Flood Risk, Heat Stress, Built-up Expansion, and Water Volatility. The system automatically highlights the **Recommended Best Location**.
+
+### 3. Satellite Environmental Trends & Historical Charts
+1. Navigate to **Trends**.
+2. Pick a location and temporal window (e.g., 2018–2024).
+3. View interactive FL Chart time-series graphs for **NDVI** (Vegetation), **NDWI** (Water extent), **NDBI** (Built-up expansion), and **LST** (Land Surface Temperature in °C).
+
+### 4. Executive PDF Reports & Settings
+1. Navigate to **Reports** to generate exportable PDF risk summaries.
+2. Navigate to **Settings** to inspect backend API latency, switch measurement units (°C vs °F), or test cloud connection health.
+
+---
+
+## 📂 Complete Project Structure
 
 ```
 Nasa Space App/
-├── mobile/                  # Flutter mobile application
-│   ├── lib/main.dart        # SpaceRisk mobile UI
-│   └── pubspec.yaml         # Dependencies (http, firebase_core, provider, etc.)
-├── backend/                 # Django REST Framework backend
-│   ├── api/                 # REST views, indicators & trend endpoints
-│   └── backend/             # Settings, URLs, and Firebase Admin config
-├── .gitignore               # Multi-platform git ignore rule set
-└── README.md                # Project documentation & script
+├── mobile/                           # Flutter Cross-Platform Client Application
+│   ├── android/                      # Native Android project configuration
+│   ├── ios/                          # Native iOS project configuration
+│   ├── lib/                          # Main Dart Source Code
+│   │   ├── main.dart                 # App Entry Point & Navigation Container
+│   │   ├── models/                   # Data Models & Presets
+│   │   │   ├── preset_sites.dart     # Calibrated Benchmark Locations
+│   │   │   └── risk_models.dart      # Risk Evaluation & Indicator Data Schema
+│   │   ├── screens/                  # Application UI Screens
+│   │   │   ├── apod_screen.dart      # NASA Astronomy Picture of the Day Feed
+│   │   │   ├── dashboard_screen.dart # Main Operational Executive Dashboard
+│   │   │   ├── indicators_screen.dart# Satellite Trend Charts & Index Analyzer
+│   │   │   ├── reports_screen.dart   # B2B PDF Executive Report Generator
+│   │   │   ├── settings_screen.dart  # System Engine & Connection Configurator
+│   │   │   ├── site_comparison_screen.dart # Multi-Site Comparison Matrix
+│   │   │   └── site_risk_screen.dart # Single-Site MCDA Evaluation Gauge
+│   │   ├── services/                 # API & Data Integration Services
+│   │   │   └── api_service.dart      # Django REST API Client & Seed Failover Engine
+│   │   ├── theme/                    # Design System & Palette Engine
+│   │   │   ├── app_theme.dart        # B2B Light & Dark Mode Color System
+│   │   │   └── theme_provider.dart   # System Theme Listener & Persistence
+│   │   └── widgets/                  # Reusable Custom Components
+│   │       ├── indicator_chart.dart  # Multi-line FL Chart Visualization
+│   │       └── risk_gauge.dart       # Interactive 0-100 Radial Risk Gauge
+│   ├── test/                         # Flutter Unit & Widget Smoke Tests
+│   ├── pubspec.yaml                  # Dart Dependencies & Asset Definitions
+│   └── vercel.json                   # Vercel Deployment Configuration for Flutter Web
+├── backend/                          # Django REST Framework Service
+│   ├── api/                          # Core REST API Application
+│   │   ├── dataset_service.py        # NASA HLS & Local JSON Benchmarks Engine
+│   │   ├── serializers.py            # DRF Request/Response Serializers
+│   │   ├── urls.py                   # API Endpoint Route Mappings
+│   │   ├── views.py                  # MCDA Risk & Multi-Site Comparison Logic
+│   │   └── tests.py                  # Django Automated Test Cases
+│   ├── backend/                      # Django Project Core Configuration
+│   │   ├── settings.py               # Settings, CORS, & drf-spectacular Config
+│   │   └── urls.py                   # Main URL Routing & Swagger/ReDoc Endpoints
+│   ├── nasa_hls_bangladesh.json      # Benchmark Multi-Year Satellite Indicators
+│   ├── manage.py                     # Django CLI Admin Runner
+│   ├── requirements.txt              # Python Dependencies
+│   └── Procfile                      # Render Web WSGI Server Process Definition
+├── build.sh                          # Cloud Deployment Build Script
+├── vercel.json                       # Root Vercel Monorepo Deployment Config
+├── BUSINESS_PLAN.md                  # Comprehensive B2B Monetization & Strategy
+├── PROJECT_PLAN.md                   # Architectural Roadmap & Challenge Specs
+├── USER_GUIDELINE.md                 # End-to-End Operational Manual
+├── SpaceRisk.apk                     # Compiled Android Release Package
+└── README.md                         # Main Repository Documentation
 ```
 
 ---
@@ -213,7 +295,7 @@ python -m venv venv
 # On Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
 
-pip install django djangorestframework django-cors-headers firebase-admin requests python-dotenv
+pip install django djangorestframework django-cors-headers firebase-admin requests python-dotenv drf-spectacular gunicorn whitenoise
 
 # Run migrations & start server
 python manage.py migrate
@@ -242,11 +324,48 @@ Access interactive Swagger UI and Redoc API documentation locally or on cloud:
 - `POST /api/risk-analysis/` — SpaceRisk site evaluation for project types (warehouse, factory, solar farm)
 - `POST /api/site-comparison/` — Side-by-side comparison of candidate infrastructure sites
 
-
 ### 2. Mobile Setup (Flutter)
 
 ```bash
 cd mobile
 flutter pub get
-flutter run
+flutter run -d chrome
 ```
+
+---
+
+## ⚠️ Limitations & Future Technical Roadmap
+
+### Current Version Limitations
+1. **Cloud Cover & Optical Gaps:** NASA HLS optical bands (Landsat/Sentinel-2) can occasionally experience cloud masking artifacts during peak monsoon months in coastal tropical zones.
+2. **Spatial Resolution Bound:** Baseline HLS resolution is 30 meters; sub-meter local municipal structural details require commercial satellite add-ons.
+3. **Regional Focus:** Baseline seed dataset covers key economic zones in Bangladesh, with live CMR API fallback for global coordinates.
+
+### Future Technical Roadmap
+* **Phase 1 (Q4 2026): SAR Radar Data Integration:** Integrate Sentinel-1 Synthetic Aperture Radar (SAR) to penetrate all-weather cloud cover during tropical monsoons.
+* **Phase 2 (Q1 2027): Machine Learning Risk Predictive Engine:** Transition from static MCDA formulas to predictive XGBoost and Random Forest time-series forecasting models for 2030–2050 climate scenarios.
+* **Phase 3 (Q2 2027): Automated GIS Polygon Importer:** Support GeoJSON and Shapefile uploads for enterprise parcel boundary analysis.
+* **Phase 4 (Q3 2027): Mobile App Stores Distribution:** Release dedicated native iOS App Store and Google Play Store packages with push notification climate alerts.
+
+---
+
+## 🧪 Automated Testing & Quality Assurance
+
+### Backend Test Suite Execution
+```bash
+cd backend
+python manage.py test
+```
+*Verifies status endpoints, payload schemas, MCDA weighted scoring calculations, and multi-site ranking algorithms.*
+
+### Frontend Test Suite Execution
+```bash
+cd mobile
+flutter test
+```
+*Verifies theme provider persistence, widget rendering, and navigation container state.*
+
+---
+
+> **SpaceRisk — Before You Build. Know the Risk.**  
+> *Developed by Team NextGen Galaxy for the NASA Space Apps Challenge.*
