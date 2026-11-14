@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from api.views import api_root
 
 urlpatterns = [
+    path('', api_root, name='root'),
+    path('favicon.ico', lambda request: HttpResponse(status=204)),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     
