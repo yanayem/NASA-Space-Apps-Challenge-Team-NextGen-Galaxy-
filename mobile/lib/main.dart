@@ -60,8 +60,6 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final width = MediaQuery.of(context).size.width;
     final isWideScreen = width >= 800;
 
@@ -112,17 +110,6 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
           ],
         ),
         actions: [
-          // Quick Theme Toggle Button
-          IconButton(
-            icon: Icon(
-              isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-              size: 20,
-              color: isDark ? AppTheme.accentAmber : AppTheme.primaryBlue,
-            ),
-            onPressed: () => themeProvider.toggleTheme(context),
-            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-          ),
-
           // Settings Action Button
           IconButton(
             icon: Icon(
