@@ -1,4 +1,4 @@
-# NextGen Galaxy — SpaceRisk 🌌
+# NextGen Galaxy — SpaceRisk
 
 > **Before You Build. Know the Risk.**
 
@@ -6,16 +6,16 @@ A location intelligence platform powered by Earth-observation data to help decis
 
 ---
 
-## 🌐 Live Deployment Links
+## Live Deployment Links
 
-* 🌐 **Web Application (Vercel):** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
-* ⚙️ **Backend REST API (Render):** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
-* 📚 **Interactive Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
-* 📖 **Interactive ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
+* **Web Application (Vercel):** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
+* **Backend REST API (Render):** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
+* **Interactive Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
+* **Interactive ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
 
 ---
 
-## 👥 Team NextGen Galaxy
+## Team NextGen Galaxy
 
 | Name | Role |
 | :--- | :--- |
@@ -28,7 +28,7 @@ A location intelligence platform powered by Earth-observation data to help decis
 
 ---
 
-## 🎯 Core Story & Central Message
+## Core Story & Central Message
 
 ```
 Today ───► Past ───► Present ───► Trends ───► Decision
@@ -43,7 +43,7 @@ Today ───► Past ───► Present ───► Trends ───► De
 
 ---
 
-## 🚨 The Problem & The Big Idea
+## The Problem & The Big Idea
 
 ### The Problem
 When companies or governments plan major infrastructure (warehouses, factories, solar farms), they traditionally focus on current conditions: affordable land, road access, and current mapping imagery. However, a single snapshot cannot reveal critical environmental trajectories—such as rising surface water, land-surface temperature surges, or rapid loss of vegetation.
@@ -56,7 +56,7 @@ Instead of asking only *"What does this location look like?"*, SpaceRisk asks:
 
 ---
 
-## 🛰️ Integrated NASA Datasets & Earth-Observation Catalogs
+## Integrated NASA Datasets & Earth-Observation Catalogs
 
 SpaceRisk integrates live NASA Earthdata catalogs, satellite metadata APIs, and multi-year temporal datasets:
 
@@ -87,13 +87,13 @@ SpaceRisk integrates live NASA Earthdata catalogs, satellite metadata APIs, and 
 
 ---
 
-## 📍 Focus Region
+## Focus Region
 
 Our initial deployment focuses on **Bangladesh**—a region experiencing rapid urbanization, industrial expansion, and significant exposure to environmental change and water-related risks. SpaceRisk helps responsible planners assess long-term site viability before committing heavy infrastructure investment.
 
 ---
 
-## 🎬 240-Second Video Script (Single Narrator)
+## 240-Second Video Script (Single Narrator)
 
 ### **0:00–0:20 — Hook / Attention**
 > Before we build a warehouse, a factory, a solar farm, or any major infrastructure, we usually ask one simple question: *Is this a good location?* But what if we are looking at that location only as it is today? What if the real story is hidden in how that place has changed over the past several years? Today tells us what a place looks like. Trends can tell us what a place is becoming.
@@ -125,29 +125,29 @@ Our initial deployment focuses on **Bangladesh**—a region experiencing rapid u
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+## Architecture & Technology Stack
 
 SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full-stack Earth-observation intelligence ecosystem combining NASA satellite pipelines, AI/NLG processing, and cloud distribution:
 
-### 1. 📱 Frontend & Visualization (Mobile & Web):
+### 1. Frontend & Visualization (Mobile & Web):
 - **Flutter (Dart 3.x):** Cross-platform high-performance UI framework supporting Web, Android, iOS, and Desktop.
 - **Interactive Map Engine:** Precise Lat/Lon coordinate selection & polygon boundaries.
 - **FL Chart & Custom Gauges:** Interactive multi-year time-series trend plotting (NDVI, NDWI, NDBI, LST).
 
-### 2. ⚙️ Core Engine & Cloud Backend:
+### 2. Core Engine & Cloud Backend:
 - **Django REST Framework (DRF):** Robust Python RESTful API core.
 - **drf-spectacular (OpenAPI 3.0):** Interactive Swagger UI & ReDoc API documentation.
 - **Render Cloud Platform:** Production WSGI cloud hosting with 24/7 uptime.
 - **Gunicorn & WhiteNoise:** High-concurrency application server and static assets delivery.
 
-### 3. 🛰️ Satellite Pipelines & NASA Datasets:
+### 3. Satellite Pipelines & NASA Datasets:
 - **NASA Harmonized Landsat and Sentinel-2 (HLS):** 30m resolution Surface Reflectance (`HLSL30` / `HLSS30`).
 - **OPERA Water Extent:** Level-3 DSWx-HLS dynamic inundation data.
 - **NASA CMR Live Search API:** Real-time granule metadata queries.
 - **NASA APOD API:** Live daily astronomy feed.
 - **MODIS & VIIRS:** Surface thermal anomalies and Land Surface Temperature (LST).
 
-### 4. 🤖 AI, NLP & Export Services:
+### 4. AI, NLP & Export Services:
 - **Natural Language Generation (NLG):** Automated AI investment risk summaries & engineering mitigations.
 - **Project Weighting Algorithm:** Tailored risk matrix (Warehouse, Factory, Solar Farm, Data Center, Telecom).
 - **B2B PDF Report Engine:** Automated executive report generation.
@@ -155,7 +155,7 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 
 ---
 
-## 🛠️ Detailed Technology Stack & Software Tools Matrix
+## Detailed Technology Stack & Software Tools Matrix
 
 | Layer | Tool / Technology | Purpose & Description |
 | :--- | :--- | :--- |
@@ -176,7 +176,7 @@ SpaceRisk is **much more than just a basic Flutter & Django app**—it is a full
 
 ---
 
-## 🏢 B2B Business Plan & Market Strategy
+## B2B Business Plan & Market Strategy
 
 ### 1. Market Problem
 Infrastructure companies, industrial groups, and real estate developers make multi-million-dollar decisions using static mapping imagery and land price alone. Environmental exposure—such as seasonal inundation, thermal stress, or deforestation—causes massive operational losses post-construction.
@@ -193,11 +193,11 @@ Infrastructure companies, industrial groups, and real estate developers make mul
 
 ---
 
-## 🎨 B2B Enterprise Design System & Dual Theme Palette
+## B2B Enterprise Design System & Dual Theme Palette
 
 SpaceRisk avoids generic consumer AI gradients in favor of a mature **B2B Financial & Location Intelligence UI**—matching the clean standards of Palantir, Stripe, McKinsey Analytics, and ArcGIS Enterprise:
 
-### 1. ☀️ Primary Theme: Executive Enterprise Light Mode (Main B2B Focus)
+### 1. Primary Theme: Executive Enterprise Light Mode (Main B2B Focus)
 Designed for investment committees, infrastructure planners, and corporate decision-makers who require maximum readability and financial-report clarity.
 - **Page Background:** `#F8FAFC` *(Off-White Slate)*
 - **Card & Container Surface:** `#FFFFFF` *(Pure White with 1px `#E2E8F0` border & soft shadow)*
@@ -205,18 +205,18 @@ Designed for investment committees, infrastructure planners, and corporate decis
 - **Brand Primary Accent:** `#2563EB` *(Corporate Trust Blue)*
 - **Secondary Highlight Surface:** `#EFF6FF` *(Soft Blue Tint Container)*
 - **Financial Risk System Indicators:**
-  - 🟢 **Low Risk (Safe Investment):** `#059669` *(Emerald Green)*
-  - 🟡 **Moderate Risk (Caution / Mitigations Needed):** `#D97706` *(Amber Gold)*
-  - 🔴 **High / Extreme Risk (Severe Exposure):** `#DC2626` *(Crimson Red)*
+  - **Low Risk (Safe Investment):** `#059669` *(Emerald Green)*
+  - **Moderate Risk (Caution / Mitigations Needed):** `#D97706` *(Amber Gold)*
+  - **High / Extreme Risk (Severe Exposure):** `#DC2626` *(Crimson Red)*
 
-### 2. 🌙 Secondary Theme: Night Control Center Dark Mode
+### 2. Secondary Theme: Night Control Center Dark Mode
 Designed for field operations, low-light environments, and night-shift monitoring.
 - **Page Background:** `#0F172A` *(Slate 900)*
 - **Card & Container Surface:** `#1E293B` *(Slate 800 with `#334155` border)*
 - **Typography & Headers:** `#F8FAFC` *(Crisp Slate White)*
 - **Brand Primary Accent:** `#3B82F6` *(Control Blue)*
 
-### 📊 B2B Visual Elements & Layout Guidelines:
+### B2B Visual Elements & Layout Guidelines:
 - **Executive Summary Badge:** Clean white card displaying the SpaceRisk score (`42.5 / 100`) alongside high-contrast status tags (`[ MODERATE RISK ]`).
 - **Side-by-Side Comparison Matrix:** Financial-grade tabular data grid comparing 2 to 5 candidate sites.
 - **High-Contrast Trend Line Charts:** Sharp multi-year trend visualization for NDVI, NDWI, NDBI, and LST.
@@ -224,7 +224,7 @@ Designed for field operations, low-light environments, and night-shift monitorin
 
 ---
 
-## 📖 End-to-End User Guide: How to Use SpaceRisk
+## End-to-End User Guide: How to Use SpaceRisk
 
 ### 1. Single-Site Risk Evaluation Engine
 1. Navigate to **Risk 0-100** from the side rail or navigation bar.
@@ -249,7 +249,7 @@ Designed for field operations, low-light environments, and night-shift monitorin
 
 ---
 
-## 📂 Complete Project Structure
+## Complete Project Structure
 
 ```
 Nasa Space App/
@@ -305,7 +305,7 @@ Nasa Space App/
 
 ---
 
-## 🚀 Quick Setup Instructions
+## Quick Setup Instructions
 
 ### 1. Backend Setup (Django REST Framework)
 
@@ -323,13 +323,13 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
-### 🌐 Live Production Deployments
+### Live Production Deployments
 - **Live Web Application (Vercel):** [https://spacerisk.vercel.app/](https://spacerisk.vercel.app/)
 - **Live Base API (Render):** [https://spacerisk.onrender.com/api/](https://spacerisk.onrender.com/api/)
 - **Live Swagger UI:** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
 - **Live ReDoc UI:** [https://spacerisk.onrender.com/redoc/](https://spacerisk.onrender.com/redoc/)
 
-### 📚 Interactive API Documentation
+### Interactive API Documentation
 
 Access interactive Swagger UI and Redoc API documentation locally or on cloud:
 - **Swagger UI (Cloud):** [https://spacerisk.onrender.com/swagger/](https://spacerisk.onrender.com/swagger/)
@@ -355,7 +355,7 @@ flutter run -d chrome
 
 ---
 
-## ⚠️ Limitations & Future Technical Roadmap
+## Limitations & Future Technical Roadmap
 
 ### Current Version Limitations
 1. **Cloud Cover & Optical Gaps:** NASA HLS optical bands (Landsat/Sentinel-2) can occasionally experience cloud masking artifacts during peak monsoon months in coastal tropical zones.
@@ -370,7 +370,7 @@ flutter run -d chrome
 
 ---
 
-## 🧪 Automated Testing & Quality Assurance
+## Automated Testing & Quality Assurance
 
 ### Backend Test Suite Execution
 ```bash
